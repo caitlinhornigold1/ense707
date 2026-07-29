@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="AccessibilityAnalyser.Cli/AccessibilityAnalyser.Cli.csproj" />
+  <Project Path="AccessibilityAnalyser.Core/AccessibilityAnalyser.Core.csproj" />
+</Solution>
