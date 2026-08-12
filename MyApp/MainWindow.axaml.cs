@@ -12,17 +12,34 @@ public partial class MainWindow : Window
         InitializeComponent();
     }
 
-    private async void AnalyseWebsite_Click(
-        object? sender,
-        RoutedEventArgs e)
+private async void AnalyseWebsite_Click(
+    object? sender,
+    RoutedEventArgs e)
+{
+    string url = WebsiteUrlTextBox.Text?.Trim() ?? "";
+
+    // Clear previous error
+    UrlErrorText.Text = "";
+
+    if (string.IsNullOrWhiteSpace(url))
     {
-        string url = WebsiteUrlTextBox.Text ?? "";
+        UrlErrorText.Text = "Please enter a website URL.";
+        return;
+    }
 
-        if (string.IsNullOrWhiteSpace(url))
-        {
-            return;
-        }
+    if (!url.StartsWith("http://") && !url.StartsWith("https://"))
+    {
+        url = "https://" + url;
+    }
 
+    if (!IsValidUrl(url))
+    {
+        UrlErrorText.Text = "Please enter a valid website URL.";
+        return;
+    }
+
+    try
+    {
         var fetcher = new SourceFetcher();
 
         string html = await fetcher.GetHtmlAsync(url);
@@ -31,7 +48,24 @@ public partial class MainWindow : Window
 
         var document = await parser.ParseAsync(html);
 
-        // Website is now parsed.
         Console.WriteLine("HTML successfully parsed!");
     }
+    catch (Exception)
+    {
+        UrlErrorText.Text = "Unable to access this website. Please check the URL.";
+        return;
+    }
+}
+
+private bool IsValidUrl(string url)
+{
+    if (!Uri.TryCreate(url, UriKind.Absolute, out Uri? uri))
+    {
+        return false;
+    }
+
+    return uri.Scheme == Uri.UriSchemeHttp ||
+           uri.Scheme == Uri.UriSchemeHttps;
+}
+
 }

@@ -26,6 +26,12 @@
             x:Name="WebsiteUrlTextBox"
             PlaceholderText="Enter Website URL"/>
 
+        <TextBlock
+            x:Name="UrlErrorText"
+            Text=""
+            Foreground="Red"
+            Margin="0,5,0,0"/>
+
         <CheckBox x:Name="ShowDetailsCheckBox"
             Content="Developer Mode" />
 
