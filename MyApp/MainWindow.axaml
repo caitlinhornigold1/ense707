@@ -23,6 +23,7 @@
 
         <TextBox
             Width="350"
+            x:Name="WebsiteUrlTextBox"
             PlaceholderText="Enter Website URL"/>
 
         <CheckBox x:Name="ShowDetailsCheckBox"
@@ -44,6 +45,7 @@
             Content="Run"
             Width="150"
             Height="50"
+            Click="AnalyseWebsite_Click"
             HorizontalAlignment="Right"/>
     </StackPanel>
 
