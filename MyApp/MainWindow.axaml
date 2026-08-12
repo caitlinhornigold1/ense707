@@ -1,0 +1,51 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="MyApp.MainWindow"
+        Title="MyApp">
+
+    <StackPanel
+        HorizontalAlignment="Center"
+        VerticalAlignment="Center"
+        Spacing="20">
+
+        <TextBlock
+            Text="Website Accessibility Tester"
+            FontSize="32"
+            HorizontalAlignment="Center"/>
+
+        <TextBlock
+            Text="test how well a website conforms to accessibility standards"
+            FontSize="20"
+            HorizontalAlignment="Center"/>
+
+        <TextBox
+            Width="350"
+            PlaceholderText="Enter Website URL"/>
+
+        <CheckBox x:Name="ShowDetailsCheckBox"
+            Content="Developer Mode" />
+
+        <TextBlock
+            Text="Is there any part of the website that needs to be excluded from testing?"
+            IsVisible="{Binding #ShowDetailsCheckBox.IsChecked}" />
+            
+        <TextBlock
+            Text="Please enter the element ID or class name of the element to be excluded:"
+            IsVisible="{Binding #ShowDetailsCheckBox.IsChecked}" />
+        
+        <TextBox
+            PlaceholderText="Seperate multiple IDs or class names with commas"
+            IsVisible="{Binding #ShowDetailsCheckBox.IsChecked}" />
+
+        <Button
+            Content="Run"
+            Width="150"
+            Height="50"
+            HorizontalAlignment="Right"/>
+    </StackPanel>
+
+
+</Window>
