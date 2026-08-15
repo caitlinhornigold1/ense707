@@ -73,4 +73,25 @@ public class ParsingTests
         Assert.Contains(emptyLinks, l => l.GetAttribute("href") == "/about");
         Assert.Contains(emptyLinks, l => l.GetAttribute("href") == "/contact");
     }
+    [Fact]
+    public async Task DuplicateIdRule_ReportsIdsUsedMoreThanOnce()
+    {
+        var html = @"
+            <html><body>
+                <div id='header'></div>
+                <div id='content'></div>
+                <div id='header'></div>
+                <span id='content'></span>
+            </body></html>";
+
+        var parser = new HtmlParser();
+        var doc = await parser.ParseAsync(html);
+
+        var rule = new DuplicateIdRule();
+        var duplicates = rule.FindDuplicateIds(doc).ToList();
+
+        Assert.Equal(2, duplicates.Count);
+        Assert.Contains(duplicates, d => d.Key == "header" && d.Count() == 2);
+        Assert.Contains(duplicates, d => d.Key == "content" && d.Count() == 2);
+    }
 }
