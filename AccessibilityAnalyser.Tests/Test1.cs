@@ -1,4 +1,12 @@
-﻿namespace ColourContrast.tests
+﻿using System.Linq;
+using System.Threading.Tasks;
+using AccessibilityAnalyser.Core;
+using AccessibilityAnalyser.altdetect;
+using AngleSharp.Css.Dom;
+using Xunit;
+using AccessibilityAnalyser.Core.Rules;
+
+namespace AccessibilityAnalyser.Tests;
 {
     [TestClass]
     public sealed class ColourContrastTests

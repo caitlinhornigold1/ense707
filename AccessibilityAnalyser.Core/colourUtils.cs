@@ -1,15 +1,100 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
+using AngleSharp;
+using AngleSharp.Dom;
+using AccessabilityAnalyser.Core;
+
+public class ContrastFailure // This is what gets returned
+{
+    public string ElementTag { get; set; }
+    public string TextSnippet { get; set; }
+    public string TextColour { get; set; }
+    public string BackgroundColour { get; set; }
+    public double ContrastRatio { get; set; }
+}
 
 public class colourUtils
 {
+   public static async Task<List<ContrastFailure>> AnalyzeSiteContrastAsync(string url, string htmlString, double minimumRatio = 4.5)
+    {
+        var failures = new List<ContrastFailure>();
+
+        // headless DOM
+        var config = Configuration.Default.WithCss();
+        var context = BrowsingContext.New(config);
+
+        // allow AngleSharp to resolve relative links
+        var document = await context.OpenAsync(req => req.Content(htmlString).Address(url));
+        var window = document.DefaultView;
+
+        // get all elements in the body
+        var elements = document.Body.Descendents().OfType<IElement>();
+
+        foreach (var element in elements)
+        {
+            // test elements that contain text
+            bool hasDirectText = element.ChildNodes.Any(n => n.NodeType == NodeType.Text && !string.IsNullOrWhiteSpace(n.TextContent));
+            if (!hasDirectText) continue;
+
+            var style = window.GetComputedStyle(element);
+            string textColourStr = style.GetPropertyValue("color");
+            string bgColourStr = GetEffectiveBackground(element, window);
+
+            try
+            {
+                double ratio = GetContrastRatio(textColourStr, bgColourStr);
+
+                if (ratio < minimumRatio)
+                {
+                    failures.Add(new ContrastFailure
+                    {
+                        ElementTag = element.LocalName,
+                        TextSnippet = element.TextContent.Trim(),
+                        TextColour = textColourStr,
+                        BackgroundColour = bgColourStr,
+                        ContrastRatio = Math.Round(ratio, 2)
+                    });
+                }
+            }
+            catch (FormatException)
+            {
+                // skips element if it contains unparsable CSS
+                continue;
+            }
+        }
+
+        return failures;
+    }
+
+    // helper to traverse DOM tree if background is transparent
+    private static string GetEffectiveBackground(IElement element, IWindow window)
+    {
+        var current = element;
+        while (current != null)
+        {
+            var style = window.GetComputedStyle(current);
+            string bg = style.GetPropertyValue("background-color");
+
+            // angleSharp transparent = rgba(0, 0, 0, 0)
+            if (!string.IsNullOrWhiteSpace(bg) && bg != "rgba(0, 0, 0, 0)" && bg != "transparent")
+            {
+                return bg;
+            }
+            current = current.ParentElement;
+        }
+        return "rgb(255, 255, 255)"; // Default browser
+    }
+
     public readonly struct colourRgb
     {
-        public double R { get; } // 0.0 to 1.0
-        public double G { get; } // 0.0 to 1.0
-        public double B { get; } // 0.0 to 1.0
-        public double A { get; } // 0.0 to 1.0
+        public double R { get; }
+        public double G { get; }
+        public double B { get; }
+        public double A { get; }
 
         public colourRgb(double r, double g, double b, double a = 1.0)
         {
@@ -19,9 +104,6 @@ public class colourUtils
             A = Math.Clamp(a, 0.0, 1.0);
         }
 
-        /// <summary>
-        /// Blends alpha against a white background (default for web/text readability).
-        /// </summary>
         public colourRgb FlattenAgainstWhite()
         {
             if (A >= 1.0) return this;
@@ -33,13 +115,9 @@ public class colourUtils
             );
         }
 
-        // Calculate the WCAG 2.x relative luminance (0.0 to 1.0).
         public double GetRelativeLuminance()
         {
-            // flatten alpha if semi-transparent
             var opaque = FlattenAgainstWhite();
-
-            // Convert SRGB to linear RGB using WCAG
             double ConvertComponent(double c) =>
                 c <= 0.04045 ? c / 12.92 : Math.Pow((c + 0.055) / 1.055, 2.4);
 
@@ -47,12 +125,10 @@ public class colourUtils
             double gLinear = ConvertComponent(opaque.G);
             double bLinear = ConvertComponent(opaque.B);
 
-            // Perceived brightness weights (SRGB / Rec709)
             return 0.2126 * rLinear + 0.7152 * gLinear + 0.0722 * bLinear;
         }
     }
 
-    // Parse Hex (#RGB, #RGBA, #RRGGBB, #RRGGBBAA), rgb(...), and rgba(...) formats into colourRgb.
     public static colourRgb ParseColour(string colourStr)
     {
         if (string.IsNullOrWhiteSpace(colourStr))
@@ -60,12 +136,10 @@ public class colourUtils
 
         colourStr = colourStr.Trim().ToLowerInvariant();
 
-        // Hex
         if (colourStr.StartsWith("#"))
         {
             string hex = colourStr.Substring(1);
 
-            // Expand 3 or 4-digit shorthand (#abc -> #aabbcc)
             if (hex.Length == 3 || hex.Length == 4)
             {
                 string expanded = "";
@@ -84,7 +158,6 @@ public class colourUtils
             }
         }
 
-        // rgb or rgba
         var match = Regex.Match(colourStr, @"^rgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*(?:,\s*([\d.]+)\s*)?\)$");
         if (match.Success)
         {
@@ -104,8 +177,6 @@ public class colourUtils
         throw new FormatException($"Unsupported colour format: '{colourStr}'");
     }
 
-    // Compute WCAG Contrast Ratio between colours
-    // Returns double between 1.0 (lowest) and 21.0 (highest, black vs white).
     public static double GetContrastRatio(string colourA, string colourB)
     {
         colourRgb c1 = ParseColour(colourA);

@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using AccessibilityAnalyser.Core;
+using AccessibilityAnalyser.altdetect;
 using AngleSharp.Css.Dom;
 using Xunit;
 using AccessibilityAnalyser.Core.Rules;
@@ -9,6 +10,7 @@ namespace AccessibilityAnalyser.Tests;
 
 public class ParsingTests
 {
+
     [Fact]
     public async Task Fetcher_RetrievesHtml_FromLiveSite()
     {
