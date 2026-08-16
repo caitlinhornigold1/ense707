@@ -9,12 +9,8 @@ namespace AccessibilityAnalyser
     {
         public int MissingAlts { get; private set; }
 
-        public async Task<int> ScanAsync(string inputURI)
+        public async Task<int> ScanAsync(string html)
         {
-            // Get page
-            var fetcher = new SourceFetcher();
-            var html = await fetcher.GetHtmlAsync(inputURI);
-
             // Get all <img>
             var imgMatches = Regex.Matches(html, @"<img\b[^>]*>", RegexOptions.IgnoreCase);
             int count = 0;

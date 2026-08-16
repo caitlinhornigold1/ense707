@@ -6,12 +6,14 @@ public class Report
 {
 	double finalScore;
 	string uri;
+	int missedAltAttributes;
 	public Report(string uri, string html)
 	{
 		uri = uri;
 		finalScore = 0.0;
 		var html = html;
-	}
+        missedAltAttributes = 0;
+    }
 
 	public Report GenerateReport(string uri, ...)
 	{
@@ -32,7 +34,8 @@ public class Report
 				currentReport.finalScore -= 5.0
 				break;
 			
+		currentReport.missedAltAttributes = AltsResult
 
-
+		colourUtils.AnalyzeSiteContrastAsync(currentReport.uri, currentReport.html, 4.5) // third variable is temporary
     }
 }
