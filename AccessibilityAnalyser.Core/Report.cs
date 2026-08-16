@@ -1,41 +1,51 @@
-﻿using System;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using AccessibilityAnalyser;
 
-namespace AccessabilityAnalyser;
+namespace AccessibilityAnalyser.Core;
 
 public class Report
 {
-	double finalScore;
-	string uri;
-	int missedAltAttributes;
+	public string Uri { get; init; }
+	public string Html { get; init; }
+	public double FinalScore { get; private set; }
+	public int MissedAltAttributes { get; private set; }
+	public List<ContrastFailure> ContrastFailures { get; private set; } = new();
+
 	public Report(string uri, string html)
 	{
-		uri = uri;
-		finalScore = 0.0;
-		var html = html;
-        missedAltAttributes = 0;
-    }
+		Uri = uri;
+		Html = html;
+		FinalScore = 0.0;
+		MissedAltAttributes = 0;
+	}
 
-	public Report GenerateReport(string uri, ...)
+	public static async Task<Report> GenerateReportAsync(string uri)
 	{
-        var fetcher = new SourceFetcher();
-        var html = await fetcher.GetHtmlAsync(uri);
+		var fetcher = new SourceFetcher();
+		var html = await fetcher.GetHtmlAsync(uri);
 
-		Report currentReport = new Report(uri, html);
+		var report = new Report(uri, html);
 
-		int AltsResult = AccessabilityAnalyser.altdetect ScanAsync(html);
-		switch(AltsResult)
-			case: 0
-				currentReport.finalScore += 15.0;
-				break;		
-			case: 1
-				currentReport.finalScore += 10.0
-				break;
-			case: >1
-				currentReport.finalScore -= 5.0
-				break;
-			
-		currentReport.missedAltAttributes = AltsResult
+		// Run alt-text detection (separate project/class)
+		var detector = new Detection();
+		int missingAlts = await detector.ScanAsync(html);
+		report.MissedAltAttributes = missingAlts;
 
-		colourUtils.AnalyzeSiteContrastAsync(currentReport.uri, currentReport.html, 4.5) // third variable is temporary
-    }
+		if (missingAlts == 0)
+			report.FinalScore += 15.0;
+		else if (missingAlts == 1)
+			report.FinalScore += 10.0;
+		else
+			report.FinalScore -= 5.0;
+
+		// Run contrast analysis
+		var contrastFailures = await colourUtils.AnalyzeSiteContrastAsync(uri, html, 4.5);
+		report.ContrastFailures = contrastFailures ?? new List<ContrastFailure>();
+
+		// Adjust score based on contrast issues (simple heuristic)
+		report.FinalScore -= Math.Min(20.0, report.ContrastFailures.Count * 1.5);
+
+		return report;
+	}
 }
