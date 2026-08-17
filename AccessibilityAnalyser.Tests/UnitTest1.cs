@@ -1,13 +1,16 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using AccessibilityAnalyser.Core;
+//using AccessibilityAnalyser.altdetect;
 using AngleSharp.Css.Dom;
 using Xunit;
+using AccessibilityAnalyser.Core.Rules;
 
 namespace AccessibilityAnalyser.Tests;
 
 public class ParsingTests
 {
+
     [Fact]
     public async Task Fetcher_RetrievesHtml_FromLiveSite()
     {
@@ -50,5 +53,47 @@ public class ParsingTests
         Assert.Equal("rgba(255, 255, 255, 1)", style.GetPropertyValue("background-color"));
         Assert.Equal("16px", style.GetPropertyValue("font-size"));
         Assert.Equal("200px", style.GetPropertyValue("width"));
+    }
+    [Fact]
+    public async Task EmptyLinkRule_ReportsLinkWithNoTextOrLabel()
+    {
+        var html = @"
+            <html><body>
+                <a href='/home'>Home</a>
+                <a href='/about'></a>
+                <a href='/contact'><img src='icon.png'></a>
+                <a href='/help' aria-label='Get help'></a>
+            </body></html>";
+
+        var parser = new HtmlParser();
+        var doc = await parser.ParseAsync(html);
+
+        var rule = new EmptyLinkRule();
+        var emptyLinks = rule.FindEmptyLinks(doc).ToList();
+
+        Assert.Equal(2, emptyLinks.Count);
+        Assert.Contains(emptyLinks, l => l.GetAttribute("href") == "/about");
+        Assert.Contains(emptyLinks, l => l.GetAttribute("href") == "/contact");
+    }
+    [Fact]
+    public async Task DuplicateIdRule_ReportsIdsUsedMoreThanOnce()
+    {
+        var html = @"
+            <html><body>
+                <div id='header'></div>
+                <div id='content'></div>
+                <div id='header'></div>
+                <span id='content'></span>
+            </body></html>";
+
+        var parser = new HtmlParser();
+        var doc = await parser.ParseAsync(html);
+
+        var rule = new DuplicateIdRule();
+        var duplicates = rule.FindDuplicateIds(doc).ToList();
+
+        Assert.Equal(2, duplicates.Count);
+        Assert.Contains(duplicates, d => d.Key == "header" && d.Count() == 2);
+        Assert.Contains(duplicates, d => d.Key == "content" && d.Count() == 2);
     }
 }
