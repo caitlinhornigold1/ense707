@@ -196,10 +196,12 @@ public class colourUtils
     {
         // NOT IDEAL - REMOVE ONCE BETTER SOLUTION IS IMPL
         // REMOVETAG - William
-        if (colourA == null)
+        if (string.IsNullOrWhiteSpace(colourA))
             colourA = "rgba(255, 255, 255, 255)";
-        if (colourB == null)
+        if (string.IsNullOrWhiteSpace(colourB))
             colourB = "rgba(255, 255, 255, 255)";
+
+
         colourRgb c1 = ParseColour(colourA);
         colourRgb c2 = ParseColour(colourB);
 
