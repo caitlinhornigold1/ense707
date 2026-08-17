@@ -10,10 +10,10 @@ using AccessibilityAnalyser.Core;
 
 public class ContrastFailure // This is what gets returned
 {
-    public string ElementTag { get; set; }
-    public string TextSnippet { get; set; }
-    public string TextColour { get; set; }
-    public string BackgroundColour { get; set; }
+    public string ElementTag { get; set; } = string.Empty;
+    public string TextSnippet { get; set; } = string.Empty;
+    public string TextColour { get; set; } = string.Empty;
+    public string BackgroundColour { get; set; } = string.Empty;
     public double ContrastRatio { get; set; }
 }
 
