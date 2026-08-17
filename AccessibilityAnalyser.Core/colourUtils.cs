@@ -10,10 +10,10 @@ using AccessibilityAnalyser.Core;
 
 public class ContrastFailure // This is what gets returned
 {
-    public string ElementTag { get; set; }
-    public string TextSnippet { get; set; }
-    public string TextColour { get; set; }
-    public string BackgroundColour { get; set; }
+    public string ElementTag { get; set; } = string.Empty;
+    public string TextSnippet { get; set; } = string.Empty;
+    public string TextColour { get; set; } = string.Empty;
+    public string BackgroundColour { get; set; } = string.Empty;
     public double ContrastRatio { get; set; }
 }
 
@@ -30,9 +30,19 @@ public class colourUtils
         // allow AngleSharp to resolve relative links
         var document = await context.OpenAsync(req => req.Content(htmlString).Address(url));
         var window = document.DefaultView;
+        if (window is null)
+        {
+            return failures;
+        }
+
+        var body = document.Body;
+        if (body is null)
+        {
+            return failures;
+        }
 
         // get all elements in the body
-        var elements = document.Body.Descendents().OfType<IElement>();
+        var elements = body.Descendents().OfType<IElement>();
 
         foreach (var element in elements)
         {
@@ -71,9 +81,14 @@ public class colourUtils
     }
 
     // helper to traverse DOM tree if background is transparent
-    private static string GetEffectiveBackground(IElement element, IWindow window)
+    private static string GetEffectiveBackground(IElement element, IWindow? window)
     {
-        var current = element;
+        if (window is null)
+        {
+            return "rgb(255, 255, 255)"; // Default browser
+        }
+
+        IElement? current = element;
         while (current != null)
         {
             var style = window.GetComputedStyle(current);
