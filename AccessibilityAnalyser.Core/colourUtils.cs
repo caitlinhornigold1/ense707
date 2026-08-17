@@ -6,7 +6,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using AngleSharp;
 using AngleSharp.Dom;
-using AccessabilityAnalyser.Core;
+using AccessibilityAnalyser.Core;
 
 public class ContrastFailure // This is what gets returned
 {
