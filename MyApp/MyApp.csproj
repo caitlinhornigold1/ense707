@@ -16,4 +16,8 @@
       <PrivateAssets Condition="'$(Configuration)' != 'Debug'">All</PrivateAssets>
     </PackageReference>
   </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\AccessibilityAnalyser.Core\AccessibilityAnalyser.Core.csproj" />
+  </ItemGroup>
 </Project>

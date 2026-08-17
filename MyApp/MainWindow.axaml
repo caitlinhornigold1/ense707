@@ -2,50 +2,120 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        mc:Ignorable="d"
+        d:DesignWidth="800"
+        d:DesignHeight="600"
         x:Class="MyApp.MainWindow"
-        Title="MyApp">
+        Title="Website Accessibility Tester">
 
-    <StackPanel
-        HorizontalAlignment="Center"
-        VerticalAlignment="Center"
-        Spacing="20">
+    <ScrollViewer>
+        <StackPanel
+            Margin="30"
+            Spacing="20">
 
-        <TextBlock
-            Text="Website Accessibility Tester"
-            FontSize="32"
-            HorizontalAlignment="Center"/>
+            <TextBlock
+                Text="Website Accessibility Tester"
+                FontSize="32"
+                HorizontalAlignment="Center"/>
 
-        <TextBlock
-            Text="test how well a website conforms to accessibility standards"
-            FontSize="20"
-            HorizontalAlignment="Center"/>
+            <TextBlock
+                Text="Test how well a website conforms to accessibility standards"
+                FontSize="20"
+                HorizontalAlignment="Center"/>
 
-        <TextBox
-            Width="350"
-            PlaceholderText="Enter Website URL"/>
+            <TextBox
+                x:Name="WebsiteUrlTextBox"
+                Width="350"
+                HorizontalAlignment="Center"
+                PlaceholderText="Enter Website URL"/>
 
-        <CheckBox x:Name="ShowDetailsCheckBox"
-            Content="Developer Mode" />
+            <CheckBox
+                x:Name="ShowDetailsCheckBox"
+                Content="Developer Mode"
+                HorizontalAlignment="Center"/>
 
-        <TextBlock
-            Text="Is there any part of the website that needs to be excluded from testing?"
-            IsVisible="{Binding #ShowDetailsCheckBox.IsChecked}" />
-            
-        <TextBlock
-            Text="Please enter the element ID or class name of the element to be excluded:"
-            IsVisible="{Binding #ShowDetailsCheckBox.IsChecked}" />
-        
-        <TextBox
-            PlaceholderText="Seperate multiple IDs or class names with commas"
-            IsVisible="{Binding #ShowDetailsCheckBox.IsChecked}" />
+            <TextBlock
+                Text="Is there any part of the website that needs to be excluded from testing?"
+                IsVisible="{Binding #ShowDetailsCheckBox.IsChecked}"
+                HorizontalAlignment="Center"/>
 
-        <Button
-            Content="Run"
-            Width="150"
-            Height="50"
-            HorizontalAlignment="Right"/>
-    </StackPanel>
+            <TextBlock
+                Text="Please enter the element ID or class name of the element to be excluded:"
+                IsVisible="{Binding #ShowDetailsCheckBox.IsChecked}"
+                HorizontalAlignment="Center"/>
 
+            <TextBox
+                Width="350"
+                PlaceholderText="Separate multiple IDs or class names with commas"
+                IsVisible="{Binding #ShowDetailsCheckBox.IsChecked}"
+                HorizontalAlignment="Center"/>
+
+            <Button
+                x:Name="RunButton"
+                Content="Run"
+                Width="150"
+                Height="50"
+                HorizontalAlignment="Center"
+                Click="RunButton_Click"/>
+
+            <!-- Error message -->
+            <TextBlock
+                x:Name="ErrorTextBlock"
+                Foreground="Red"
+                TextWrapping="Wrap"
+                IsVisible="False"
+                HorizontalAlignment="Center"/>
+
+            <!-- Report -->
+            <Border
+                x:Name="ReportPanel"
+                BorderThickness="1"
+                Padding="20"
+                IsVisible="False">
+
+                <StackPanel Spacing="10">
+
+                    <TextBlock
+                        Text="Accessibility Report"
+                        FontSize="26"
+                        FontWeight="Bold"/>
+
+                    <TextBlock
+                        x:Name="WebsiteTextBlock"/>
+
+                    <TextBlock
+                        x:Name="ScoreTextBlock"
+                        FontSize="20"
+                        FontWeight="Bold"/>
+
+                    <TextBlock
+                        x:Name="AltTextTextBlock"
+                        FontSize="18"/>
+
+                    <TextBlock
+                        x:Name="ContrastSummaryTextBlock"
+                        FontSize="18"/>
+
+                    <TextBlock
+                        Text="Contrast Failures"
+                        FontSize="22"
+                        FontWeight="Bold"
+                        Margin="0,15,0,0"/>
+
+                    <ScrollViewer
+                        MaxHeight="300">
+
+                        <StackPanel
+                            x:Name="ContrastFailuresPanel"
+                            Spacing="10"/>
+
+                    </ScrollViewer>
+
+                </StackPanel>
+
+            </Border>
+
+        </StackPanel>
+    </ScrollViewer>
 
 </Window>
