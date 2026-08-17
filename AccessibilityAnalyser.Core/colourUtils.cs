@@ -42,7 +42,7 @@ public class colourUtils
         }
 
         // get all elements in the body
-        var elements = body.Descendents().OfType<IElement>();
+        var elements = body.Descendants().OfType<IElement>();
 
         foreach (var element in elements)
         {
