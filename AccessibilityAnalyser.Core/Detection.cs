@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using AccessibilityAnalyser.Core;
+//using AccessibilityAnalyser.Core;
 
-namespace AccessibilityAnalyser
+namespace AccessibilityAnalyser.Core
 {
     public class Detection
     {
