@@ -194,6 +194,12 @@ public class colourUtils
 
     public static double GetContrastRatio(string colourA, string colourB)
     {
+        // NOT IDEAL - REMOVE ONCE BETTER SOLUTION IS IMPL
+        // REMOVETAG - William
+        if (colourA == null)
+            colourA = "rgba(255, 255, 255, 255)";
+        if (colourB == null)
+            colourB = "rgba(255, 255, 255, 255)";
         colourRgb c1 = ParseColour(colourA);
         colourRgb c2 = ParseColour(colourB);
 
