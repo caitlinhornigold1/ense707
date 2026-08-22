@@ -1,5 +1,6 @@
 using System.Net.Http;
 using System.Threading.Tasks;
+using System;
 
 namespace AccessibilityAnalyser.Core;
 
@@ -15,8 +16,19 @@ public class SourceFetcher
 
     public async Task<string> GetHtmlAsync(string url)
     {
-        var response = await _client.GetAsync(url);
-        response.EnsureSuccessStatusCode();
-        return await response.Content.ReadAsStringAsync();
+        try
+        {
+            var response = await _client.GetAsync(url);
+            response.EnsureSuccessStatusCode();
+            return await response.Content.ReadAsStringAsync();
+        }
+        catch (HttpRequestException ex)
+        {
+            throw new AnalysisException($"Could not reach '{url}'. Check the URL and your network connection.", ex);
+        }
+        catch (TaskCanceledException ex)
+        {
+            throw new AnalysisException($"The request to '{url}' timed out.", ex);
+        }
     }
 }

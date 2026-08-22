@@ -2,6 +2,7 @@ using System.Threading.Tasks;
 using AngleSharp;
 using AngleSharp.Css;
 using AngleSharp.Dom;
+using System;
 
 namespace AccessibilityAnalyser.Core;
 
@@ -10,8 +11,15 @@ public class HtmlParser
 {
     public async Task<IDocument> ParseAsync(string html)
     {
-        var config = Configuration.Default.WithCss();
-        var context = BrowsingContext.New(config);
-        return await context.OpenAsync(req => req.Content(html));
+        try
+        {
+            var config = Configuration.Default.WithCss();
+            var context = BrowsingContext.New(config);
+            return await context.OpenAsync(req => req.Content(html));
+        }
+        catch (Exception ex)
+        {
+            throw new AnalysisException("The page could not be parsed. It may not be valid HTML.", ex);
+        }
     }
 }
