@@ -10,6 +10,7 @@ public class EncapsulationTests
     [Fact]
     public async Task UnclosedElement_ReturnsUnclosedDivTag()
     {
+        Console.WriteLine("Beep Boop");
         var html = @"
             <html><body>
                 <div id='header'>
