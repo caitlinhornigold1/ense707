@@ -96,4 +96,19 @@ public class ParsingTests
         Assert.Contains(duplicates, d => d.Key == "header" && d.Count() == 2);
         Assert.Contains(duplicates, d => d.Key == "content" && d.Count() == 2);
     }
+        [Fact]
+    public async Task MissingPageTitleRule_ReportsWhenTitleIsMissing()
+    {
+        var htmlWithoutTitle = "<html><head></head><body><p>Hello</p></body></html>";
+        var htmlWithTitle = "<html><head><title>My Page</title></head><body><p>Hello</p></body></html>";
+
+        var parser = new HtmlParser();
+        var rule = new MissingPageTitleRule();
+
+        var docWithoutTitle = await parser.ParseAsync(htmlWithoutTitle);
+        var docWithTitle = await parser.ParseAsync(htmlWithTitle);
+
+        Assert.True(rule.IsTitleMissing(docWithoutTitle));
+        Assert.False(rule.IsTitleMissing(docWithTitle));
+    }
 }
