@@ -62,6 +62,33 @@ public partial class MainWindow : Window
         ContrastSummaryTextBlock.Text =
             $"Contrast failures: {report.ContrastFailures.Count}";
 
+        KeyboardSummaryTextBlock.Text =
+            $"Keyboard accessibility issues: {report.KeyboardIssues}";
+
+        KeyboardIssuesPanel.Children.Clear();
+
+        if (report.KeyboardIssueDescriptions.Count == 0)
+        {
+             KeyboardIssuesPanel.Children.Add(new TextBlock
+            {
+                Text = "✓ No keyboard accessibility issues detected.",
+                FontSize = 16
+            });
+        }
+        else
+        {
+            foreach (var issue in report.KeyboardIssueDescriptions)
+            {
+                 KeyboardIssuesPanel.Children.Add(new TextBlock
+                {
+                    Text = $"• {issue}",
+                    FontSize = 15,
+                    TextWrapping = Avalonia.Media.TextWrapping.Wrap,
+                    Margin = new Avalonia.Thickness(0, 5, 0, 5)
+                });
+            }
+        }
+
         ContrastFailuresPanel.Children.Clear();
 
         if (report.ContrastFailures.Count == 0)

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using AccessibilityAnalyser;
 
@@ -10,6 +11,8 @@ public class Report
 	public string Html { get; init; }
 	public double FinalScore { get; private set; }
 	public int MissedAltAttributes { get; private set; }
+	public int KeyboardIssues { get; private set; }
+	public List<string> KeyboardIssueDescriptions { get; private set; } = new();
 	public List<ContrastFailure> ContrastFailures { get; private set; } = new();
 
 	public Report(string uri, string html)
@@ -18,6 +21,7 @@ public class Report
 		Html = html;
 		FinalScore = 0.0;
 		MissedAltAttributes = 0;
+		KeyboardIssues = 0;
 	}
 
 	public static async Task<Report> GenerateReportAsync(string uri)
@@ -38,6 +42,18 @@ public class Report
 			report.FinalScore += 10.0;
 		else
 			report.FinalScore -= 5.0;
+
+		// Run keyboard accessibility analysis
+		var keyboardDetector = new KeyboardDetection();
+		int keyboardIssues = keyboardDetector.Scan(html);
+
+		report.KeyboardIssues = keyboardIssues;
+		report.KeyboardIssueDescriptions = new List<string>(
+			keyboardDetector.IssueDescriptions
+		);
+
+		// Adjust score based on keyboard issues
+		report.FinalScore -= Math.Min(20.0, keyboardIssues * 2.0);
 
 		// Run contrast analysis
 		var contrastFailures = await colourUtils.AnalyzeSiteContrastAsync(uri, html, 4.5);
