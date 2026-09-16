@@ -34,6 +34,24 @@ namespace AccessibilityAnalyser.Tests;
             Double value = colourUtils.GetContrastRatio("#000000", "rgb(255,255,255)");
             Assert.Equal(21.0, value);
         }
+
+        [Fact]
+        public void MissingTextColourUsesBrowserDefaultBlack()
+        {
+            Double value = colourUtils.GetContrastRatio(string.Empty, "rgb(255,255,255)");
+            Assert.Equal(21.0, value);
+        }
+
+        [Fact]
+        public async Task UnstyledTextIsNotReportedAsAContrastFailure()
+        {
+            var failures = await colourUtils.AnalyzeSiteContrastAsync(
+                "https://example.com",
+                "<html><body><p>Readable text</p></body></html>");
+
+            Assert.Empty(failures);
+        }
+
             [Fact]
     public async Task Fetcher_ThrowsAnalysisException_OnUnreachableHost()
     {

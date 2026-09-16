@@ -95,13 +95,19 @@ public class colourUtils
             string bg = style.GetPropertyValue("background-color");
 
             // angleSharp transparent = rgba(0, 0, 0, 0)
-            if (!string.IsNullOrWhiteSpace(bg) && bg != "rgba(0, 0, 0, 0)" && bg != "transparent")
+            if (!string.IsNullOrWhiteSpace(bg) && !IsTransparent(bg))
             {
                 return bg;
             }
             current = current.ParentElement;
         }
         return "rgb(255, 255, 255)"; // Default browser
+    }
+
+    private static bool IsTransparent(string colour)
+    {
+        return colour.Equals("transparent", StringComparison.OrdinalIgnoreCase)
+            || colour.Trim().Equals("rgba(0, 0, 0, 0)", StringComparison.OrdinalIgnoreCase);
     }
 
     public readonly struct colourRgb
@@ -194,12 +200,10 @@ public class colourUtils
 
     public static double GetContrastRatio(string colourA, string colourB)
     {
-        // NOT IDEAL - REMOVE ONCE BETTER SOLUTION IS IMPL
-        // REMOVETAG - William
         if (string.IsNullOrWhiteSpace(colourA))
-            colourA = "rgba(255, 255, 255, 255)";
+            colourA = "rgb(0, 0, 0)";
         if (string.IsNullOrWhiteSpace(colourB))
-            colourB = "rgba(255, 255, 255, 255)";
+            colourB = "rgb(255, 255, 255)";
 
 
         colourRgb c1 = ParseColour(colourA);
