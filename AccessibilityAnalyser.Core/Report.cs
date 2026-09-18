@@ -13,6 +13,9 @@ public class Report
 	public int MissedAltAttributes { get; private set; }
 	public int KeyboardIssues { get; private set; }
 	public List<string> KeyboardIssueDescriptions { get; private set; } = new();
+
+	public int ResponsiveIssues { get; private set; }
+	public List<string> ResponsiveIssueDescriptions { get; private set; } = new();
 	public List<ContrastFailure> ContrastFailures { get; private set; } = new();
 
 	public Report(string uri, string html)
@@ -22,6 +25,7 @@ public class Report
 		FinalScore = 0.0;
 		MissedAltAttributes = 0;
 		KeyboardIssues = 0;
+		ResponsiveIssues = 0;
 	}
 
 	public static async Task<Report> GenerateReportAsync(string uri)
@@ -54,6 +58,14 @@ public class Report
 
 		// Adjust score based on keyboard issues
 		report.FinalScore -= Math.Min(20.0, keyboardIssues * 2.0);
+
+		// Run responsive design analysis 
+		var responsiveDetector = new ResponsiveDetection(); 
+		int responsiveIssues = responsiveDetector.Scan(html); 
+		report.ResponsiveIssues = responsiveIssues; 
+		report.ResponsiveIssueDescriptions = new List<string>(responsiveDetector.IssueDescriptions); 
+		// Adjust score based on responsive issues 
+		report.FinalScore -= Math.Min(20.0, responsiveIssues * 2.0);
 
 		// Run contrast analysis
 		var contrastFailures = await colourUtils.AnalyzeSiteContrastAsync(uri, html, 4.5);

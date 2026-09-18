@@ -89,6 +89,34 @@ public partial class MainWindow : Window
             }
         }
 
+        ResponsiveSummaryTextBlock.Text = $"Responsive design issues: {report.ResponsiveIssues}"; 
+        
+        ResponsiveIssuesPanel.Children.Clear(); 
+        
+        if (report.ResponsiveIssueDescriptions.Count == 0) 
+        { 
+            ResponsiveIssuesPanel.Children.Add(new TextBlock 
+            { 
+                Text = "✓ No potential responsive design issues detected.", 
+                FontSize = 16 
+            }); 
+        } 
+        else 
+        { 
+            foreach (var issue in report.ResponsiveIssueDescriptions) 
+            { 
+                ResponsiveIssuesPanel.Children.Add(new TextBlock 
+                { 
+                    Text = $"• {issue}", 
+                    FontSize = 15, 
+                    TextWrapping = Avalonia.Media.TextWrapping.Wrap, 
+                    Margin = new Avalonia.Thickness(0, 5, 0, 5) 
+                }); 
+            } 
+        }
+
+
+
         ContrastFailuresPanel.Children.Clear();
 
         if (report.ContrastFailures.Count == 0)
