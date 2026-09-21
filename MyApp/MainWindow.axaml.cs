@@ -117,50 +117,45 @@ public partial class MainWindow : Window
 
 
 
-        ContrastFailuresPanel.Children.Clear();
+       ContrastSummaryTextBlock.Text =
+    $"Contrast failures: {report.ContrastFailures.Count}";
 
-        if (report.ContrastFailures.Count == 0)
-        {
-            var noFailures = new TextBlock
-            {
-                Text = "✓ No colour contrast failures detected.",
-                FontSize = 16
-            };
+ContrastFailuresPanel.Children.Clear();
 
-            ContrastFailuresPanel.Children.Add(noFailures);
-            return;
-        }
+foreach (var failure in report.ContrastFailures)
+{
+    var failurePanel = new StackPanel
+    {
+        Spacing = 5
+    };
 
-        foreach (var failure in report.ContrastFailures)
-        {
-            var failurePanel = new StackPanel
-            {
-                Spacing = 5
-            };
+    failurePanel.Children.Add(new TextBlock
+    {
+        Text = $"Element: {failure.ElementTag}",
+        FontWeight = Avalonia.Media.FontWeight.Bold,
+        Foreground = Avalonia.Media.Brushes.Black
+    });
 
-            failurePanel.Children.Add(new TextBlock
-            {
-                Text = $"Element: {failure.ElementTag}",
-                FontWeight = Avalonia.Media.FontWeight.Bold
-            });
+    failurePanel.Children.Add(new TextBlock
+    {
+        Text = $"Text: {failure.TextSnippet}",
+        TextWrapping = Avalonia.Media.TextWrapping.Wrap,
+        Foreground = Avalonia.Media.Brushes.Black
+    });
 
-            failurePanel.Children.Add(new TextBlock
-            {
-                Text = $"Text: {failure.TextSnippet}",
-                TextWrapping = Avalonia.Media.TextWrapping.Wrap
-            });
+    failurePanel.Children.Add(new TextBlock
+    {
+        Text = $"Text colour: {failure.TextColour}",
+        Foreground = Avalonia.Media.Brushes.Black
+    });
 
-            failurePanel.Children.Add(new TextBlock
-            {
-                Text = $"Text colour: {failure.TextColour}"
-            });
+    failurePanel.Children.Add(new TextBlock
+    {
+        Text = $"Background colour: {failure.BackgroundColour}",
+        Foreground = Avalonia.Media.Brushes.Black
+    });
 
-            failurePanel.Children.Add(new TextBlock
-            {
-                Text = $"Background colour: {failure.BackgroundColour}"
-            });
-
-            ContrastFailuresPanel.Children.Add(failurePanel);
-        }
+    ContrastFailuresPanel.Children.Add(failurePanel);
+}
     }
 }
