@@ -2,11 +2,9 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using AngleSharp;
-using AngleSharp.Css.Dom;
 using AngleSharp.Dom;
 using AccessibilityAnalyser.Core;
 
@@ -21,8 +19,6 @@ public class ContrastFailure // This is what gets returned
 
 public class colourUtils
 {
-    private static readonly HttpClient HttpClient = new();
-
    public static async Task<List<ContrastFailure>> AnalyzeSiteContrastAsync(string url, string htmlString, double minimumRatio = 4.5)
     {
         var failures = new List<ContrastFailure>();
@@ -33,19 +29,6 @@ public class colourUtils
 
         // allow AngleSharp to resolve relative links
         var document = await context.OpenAsync(req => req.Content(htmlString).Address(url));
-        var externalStylesheets = await GetExternalStylesheetsAsync(htmlString, url);
-        if (externalStylesheets.Count > 0)
-        {
-            var styles = string.Join(Environment.NewLine,
-                externalStylesheets.Select(css => $"<style>{css}</style>"));
-            htmlString = Regex.Replace(
-                htmlString,
-                @"</head>",
-                styles + "</head>",
-                RegexOptions.IgnoreCase);
-            document = await context.OpenAsync(req => req.Content(htmlString).Address(url));
-        }
-
         var window = document.DefaultView;
         if (window is null)
         {
@@ -67,7 +50,8 @@ public class colourUtils
             bool hasDirectText = element.ChildNodes.Any(n => n.NodeType == NodeType.Text && !string.IsNullOrWhiteSpace(n.TextContent));
             if (!hasDirectText) continue;
 
-            string textColourStr = GetStyleProperty(element, window, "color");
+            var style = window.GetComputedStyle(element);
+            string textColourStr = style.GetPropertyValue("color");
             string bgColourStr = GetEffectiveBackground(element, window);
 
             try
@@ -96,48 +80,6 @@ public class colourUtils
         return failures;
     }
 
-    private static async Task<List<string>> GetExternalStylesheetsAsync(string htmlString, string pageUrl)
-    {
-        var stylesheets = new List<string>();
-        if (!Uri.TryCreate(pageUrl, UriKind.Absolute, out var baseUri))
-        {
-            return stylesheets;
-        }
-
-        foreach (Match linkMatch in Regex.Matches(htmlString, @"<link\b[^>]*>", RegexOptions.IgnoreCase))
-        {
-            var link = linkMatch.Value;
-            var relMatch = Regex.Match(link, @"\brel\s*=\s*(['""])(.*?)\1", RegexOptions.IgnoreCase);
-            var rel = relMatch.Success ? relMatch.Groups[2].Value : string.Empty;
-            if (!rel.Split(' ', StringSplitOptions.RemoveEmptyEntries)
-                .Any(value => value.Equals("stylesheet", StringComparison.OrdinalIgnoreCase)))
-            {
-                continue;
-            }
-
-            var hrefMatch = Regex.Match(link, @"\bhref\s*=\s*(['""])(.*?)\1", RegexOptions.IgnoreCase);
-            var href = hrefMatch.Success ? hrefMatch.Groups[2].Value : string.Empty;
-            if (!Uri.TryCreate(baseUri, href, out var stylesheetUri) ||
-                (stylesheetUri.Scheme != Uri.UriSchemeHttp && stylesheetUri.Scheme != Uri.UriSchemeHttps))
-            {
-                continue;
-            }
-
-            try
-            {
-                stylesheets.Add(await HttpClient.GetStringAsync(stylesheetUri));
-            }
-            catch (HttpRequestException)
-            {
-            }
-            catch (TaskCanceledException)
-            {
-            }
-        }
-
-        return stylesheets;
-    }
-
     // helper to traverse DOM tree if background is transparent
     private static string GetEffectiveBackground(IElement element, IWindow? window)
     {
@@ -149,7 +91,8 @@ public class colourUtils
         IElement? current = element;
         while (current != null)
         {
-            string bg = GetStyleProperty(current, window, "background-color");
+            var style = window.GetComputedStyle(current);
+            string bg = style.GetPropertyValue("background-color");
 
             // angleSharp transparent = rgba(0, 0, 0, 0)
             if (!string.IsNullOrWhiteSpace(bg) && !IsTransparent(bg))
@@ -161,85 +104,35 @@ public class colourUtils
         return "rgb(255, 255, 255)"; // Default browser
     }
 
-    private static string GetStyleProperty(IElement element, IWindow window, string propertyName)
+    private static bool IsTransparent(string colour)
     {
-        try
-        {
-            var computedValue = window.GetComputedStyle(element).GetPropertyValue(propertyName);
-            if (!propertyName.Equals("background-color", StringComparison.OrdinalIgnoreCase) ||
-                !IsTransparent(computedValue))
-            {
-                return computedValue;
-            }
-        }
-        catch (ArgumentException)
-        {
-        }
-
-        // Computed styles need a render device for relative lengths such as em/rem.
-        // Read the cascade directly when that render-only calculation is unavailable.
-        var inlineStyle = element.GetAttribute("style") ?? string.Empty;
-        var inlineDeclaration = Regex.Match(inlineStyle,
-            $@"(?:^|;)\s*{Regex.Escape(propertyName)}\s*:\s*([^;]+)",
-            RegexOptions.IgnoreCase);
-
-        if (inlineDeclaration.Success)
-        {
-            return inlineDeclaration.Groups[1].Value.Trim();
-        }
-
-        var stylesheetValue = element.Owner?.StyleSheets
-            .OfType<ICssStyleSheet>()
-            .SelectMany(sheet => sheet.Rules.OfType<ICssStyleRule>())
-            .Where(rule => MatchesSelector(element, rule.SelectorText))
-            .Select(rule => rule.Style.GetPropertyValue(propertyName))
-            .LastOrDefault(value => !string.IsNullOrWhiteSpace(value));
-
-        Console.WriteLine($"{element.LocalName} {propertyName}: {stylesheetValue ?? "<null>"}");
-
-        return stylesheetValue ?? string.Empty;
+        return colour.Equals("transparent", StringComparison.OrdinalIgnoreCase)
+            || colour.Trim().Equals("rgba(0, 0, 0, 0)", StringComparison.OrdinalIgnoreCase);
     }
 
-    private static bool MatchesSelector(IElement element, string selector)
-    {
-        try
-        {
-            return element.Matches(selector);
-        }
-        catch (DomException)
-        {
-            var inlineStyle = element.GetAttribute("style") ?? string.Empty;
-            var inlineDeclaration = Regex.Match(inlineStyle,
-                $@"(?:^|;)\s*{Regex.Escape(propertyName)}\s*:\s*([^;]+)",
-                RegexOptions.IgnoreCase);
-
-            if (inlineDeclaration.Success)
-
-                return inlineDeclaration.Groups[1].Value.Trim();
-            }
     public readonly struct colourRgb
     {
         public double R { get; }
-            var stylesheetValue = element.Owner?.StyleSheets
-                .OfType<ICssStyleSheet>()
-                .SelectMany(sheet => sheet.Rules.OfType<ICssStyleRule>())
-                .Where(rule => MatchesSelector(element, rule.SelectorText))
-                .Select(rule => rule.Style.GetPropertyValue(propertyName))
-                .LastOrDefault(value => !string.IsNullOrWhiteSpace(value));
+        public double G { get; }
+        public double B { get; }
+        public double A { get; }
 
-            if (!string.IsNullOrWhiteSpace(stylesheetValue))
+        public colourRgb(double r, double g, double b, double a = 1.0)
+        {
             R = Math.Clamp(r, 0.0, 1.0);
-                return stylesheetValue;
+            G = Math.Clamp(g, 0.0, 1.0);
             B = Math.Clamp(b, 0.0, 1.0);
             A = Math.Clamp(a, 0.0, 1.0);
-            try
-            {
-                return window.GetComputedStyle(element).GetPropertyValue(propertyName);
-            }
-            catch (ArgumentException)
-            {
-                return string.Empty;
-            }
+        }
+
+        public colourRgb FlattenAgainstWhite()
+        {
+            if (A >= 1.0) return this;
+            return new colourRgb(
+                R * A + (1.0 - A),
+                G * A + (1.0 - A),
+                B * A + (1.0 - A),
+                1.0
             );
         }
 
