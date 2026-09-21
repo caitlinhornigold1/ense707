@@ -39,8 +39,9 @@ namespace AccessibilityAnalyser.Tests;
         public void MissingTextColourUsesBrowserDefaultBlack()
         {
             Double value = colourUtils.GetContrastRatio(string.Empty, "rgb(255,255,255)");
-            Assert.Equal(21.0, value);
-        }
+            // Assert.Equal(21.0, value);
+            Assert.Equal(5.0, value); // testing automated github action
+    }
 
         [Fact]
         public async Task UnstyledTextIsNotReportedAsAContrastFailure()
