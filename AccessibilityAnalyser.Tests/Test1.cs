@@ -72,11 +72,11 @@ namespace AccessibilityAnalyser.Tests;
             Assert.Empty(failures);
         }
 
-            [Fact]
-    public async Task Fetcher_ThrowsAnalysisException_OnUnreachableHost()
-    {
-        var fetcher = new SourceFetcher();
-        await Assert.ThrowsAsync<AnalysisException>(() =>
-            fetcher.GetHtmlAsync("https://this-domain-should-not-exist-xyz123.com"));
-    }
+        [Fact]
+        public async Task Fetcher_ThrowsAnalysisException_OnUnreachableHost()
+        {
+            var fetcher = new SourceFetcher();
+            await Assert.ThrowsAsync<AnalysisException>(() =>
+                fetcher.GetHtmlAsync("https://this-domain-should-not-exist-xyz123.com"));
+        }
     }
