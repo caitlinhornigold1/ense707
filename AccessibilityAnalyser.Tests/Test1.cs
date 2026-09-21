@@ -52,6 +52,26 @@ namespace AccessibilityAnalyser.Tests;
             Assert.Empty(failures);
         }
 
+        [Fact]
+        public async Task RelativeFontSizeDoesNotCrashContrastAnalysis()
+        {
+            var failures = await colourUtils.AnalyzeSiteContrastAsync(
+                "https://example.com",
+                "<html><head><style>p { font-size: 1rem; color: #000; }</style></head><body><p>Readable text</p></body></html>");
+
+            Assert.Empty(failures);
+        }
+
+        [Fact]
+        public async Task StylesheetBackgroundIsUsedWhenRelativeFontSizePreventsComputedStyle()
+        {
+            var failures = await colourUtils.AnalyzeSiteContrastAsync(
+                "https://example.com",
+                "<html><head><style>.container { background-color: #000; font-size: 1rem; } span { color: #fff; }</style></head><body><div class='container'><span>Readable text</span></div></body></html>");
+
+            Assert.Empty(failures);
+        }
+
             [Fact]
     public async Task Fetcher_ThrowsAnalysisException_OnUnreachableHost()
     {
