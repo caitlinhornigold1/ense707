@@ -11,6 +11,7 @@ public class Report
 	public string Html { get; init; }
 	public double FinalScore { get; private set; }
 	public int MissedAltAttributes { get; private set; }
+	public List<string> AltTextIssueDescriptions { get; private set; } = new();
 	public int KeyboardIssues { get; private set; }
 	public List<string> KeyboardIssueDescriptions { get; private set; } = new();
 
@@ -39,6 +40,36 @@ public class Report
 		var detector = new Detection();
 		int missingAlts = await detector.ScanAsync(html);
 		report.MissedAltAttributes = missingAlts;
+
+		var altMatches = System.Text.RegularExpressions.Regex.Matches(
+    html,
+    @"<img\b[^>]*>",
+    System.Text.RegularExpressions.RegexOptions.IgnoreCase
+);
+
+foreach (System.Text.RegularExpressions.Match match in altMatches)
+{
+    var imgTag = match.Value;
+
+    var altMatch = System.Text.RegularExpressions.Regex.Match(
+        imgTag,
+        @"alt\s*=\s*([""'])(.*?)\1",
+        System.Text.RegularExpressions.RegexOptions.IgnoreCase
+    );
+
+    if (!altMatch.Success)
+    {
+        report.AltTextIssueDescriptions.Add(
+            "Image is missing an alt attribute. Recommendation: Add appropriate alternative text describing the image."
+        );
+    }
+    else if (string.IsNullOrWhiteSpace(altMatch.Groups[2].Value))
+    {
+        report.AltTextIssueDescriptions.Add(
+            "Image has an empty alt attribute. Recommendation: Add descriptive alternative text, unless the image is purely decorative."
+        );
+    }
+}
 
 		if (missingAlts == 0)
 			report.FinalScore += 15.0;

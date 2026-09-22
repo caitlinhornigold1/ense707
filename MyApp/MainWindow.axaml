@@ -67,175 +67,222 @@
                 HorizontalAlignment="Center"/>
 
             <!-- Report -->
-            <!-- Report -->
-<Border
-    x:Name="ReportPanel"
-    Background="White"
-    BorderBrush="#D9DEE5"
-    BorderThickness="1"
-    CornerRadius="10"
-    Padding="25"
-    IsVisible="False">
+            <Border
+                x:Name="ReportPanel"
+                Background="White"
+                BorderBrush="#444444"
+                BorderThickness="1"
+                CornerRadius="10"
+                Padding="20"
+                IsVisible="False">
 
-    <StackPanel 
-        Spacing="15">
+                <StackPanel Spacing="15">
 
-        <!-- Report Header -->
-        <StackPanel Spacing="5">
+                    <!-- Report Header -->
+                    <StackPanel Spacing="5">
 
-            <TextBlock
-                Text="Accessibility Report"
-                FontSize="26"
-                FontWeight="Bold"/>
+                        <TextBlock
+                            Text="Accessibility Report"
+                            FontSize="26"
+                            FontWeight="Bold"
+                            Foreground="Black"/>
 
-            <TextBlock
-                x:Name="WebsiteTextBlock"
-                Foreground="#666666"/>
+                        <TextBlock
+                            x:Name="WebsiteTextBlock"
+                            Foreground="#222222"/>
 
-        </StackPanel>
-
-
-        <!-- Score -->
-        <Border
-            Background="#000000"
-            BorderBrush="#E1E4E8"
-            BorderThickness="1"
-            CornerRadius="8"
-            Padding="15">
-
-            <StackPanel Spacing="5">
-
-                <TextBlock
-                    Text="Overall Accessibility Score"
-                    FontSize="14"
-                    Foreground="#666666"/>
-
-                <TextBlock
-                    x:Name="ScoreTextBlock"
-                    FontSize="22"
-                    FontWeight="Bold"/>
-
-            </StackPanel>
-
-        </Border>
+                    </StackPanel>
 
 
-        <!-- Keyboard Accessibility -->
-        <Border
-            Background="#000000"
-            BorderBrush="#E1E4E8"
-            BorderThickness="1"
-            CornerRadius="8"
-            Padding="15">
+                    <!-- Score -->
+                    <Border
+                        Background="#000000"
+                        BorderBrush="#444444"
+                        BorderThickness="1"
+                        CornerRadius="8"
+                        Padding="15">
 
-            <StackPanel Spacing="7">
+                        <StackPanel Spacing="5">
 
-                <TextBlock
-                    Text="Keyboard Accessibility"
-                    FontSize="20"
-                    FontWeight="Bold"/>
+                            <TextBlock
+                                Text="Overall Score"
+                                FontSize="14"
+                                Foreground="#BBBBBB"/>
 
-                <TextBlock
-                    x:Name="KeyboardSummaryTextBlock"
-                    FontSize="16"/>
+                            <TextBlock
+                                x:Name="ScoreTextBlock"
+                                FontSize="24"
+                                FontWeight="Bold"
+                                Foreground="White"/>
 
-                <StackPanel
-                    x:Name="KeyboardIssuesPanel"
-                    Spacing="5"/>
+                        </StackPanel>
 
-            </StackPanel>
-
-        </Border>
+                    </Border>
 
 
-        <!-- Alternative Text -->
-        <Border
-            Background="#000000"
-            BorderBrush="#E1E4E8"
-            BorderThickness="1"
-            CornerRadius="8"
-            Padding="15">
+                    <!-- Alternative Text -->
+                    <Border
+                        Background="#000000"
+                        BorderBrush="#444444"
+                        BorderThickness="1"
+                        CornerRadius="8"
+                        Padding="15">
 
-            <StackPanel Spacing="7">
+                        <StackPanel Spacing="8">
 
-                <TextBlock
-                    Text="Alternative Text"
-                    FontSize="20"
-                    FontWeight="Bold"/>
+                            <TextBlock
+                                Text="Alternative Text"
+                                FontSize="20"
+                                FontWeight="Bold"
+                                Foreground="White"/>
 
-                <TextBlock
-                    x:Name="AltTextTextBlock"
-                    FontSize="16"/>
+                            <TextBlock
+                                x:Name="AltTextTextBlock"
+                                FontSize="16"
+                                Foreground="White"/>
 
-            </StackPanel>
+                            <Expander
+                                x:Name="AltTextExpander"
+                                Header="View issues"
+                                Foreground="White"
+                                IsVisible="False">
 
-        </Border>
+                                <StackPanel
+                                    x:Name="AltTextIssuesPanel"
+                                    Spacing="5"
+                                    Margin="10,10,0,0"/>
 
+                            </Expander>
 
-        <!-- Responsive Design -->
-        <Border
-            Background="#000000"
-            BorderBrush="#E1E4E8"
-            BorderThickness="1"
-            CornerRadius="8"
-            Padding="15">
+                        </StackPanel>
 
-            <StackPanel Spacing="7">
-
-                <TextBlock
-                    Text="Responsive Design"
-                    FontSize="20"
-                    FontWeight="Bold"/>
-
-                <TextBlock
-                    x:Name="ResponsiveSummaryTextBlock"
-                    FontSize="16"/>
-
-                <StackPanel
-                    x:Name="ResponsiveIssuesPanel"
-                    Spacing="5"/>
-
-            </StackPanel>
-
-        </Border>
+                    </Border>
 
 
-        <!-- Colour Contrast -->
-        <Border
-            Background="#000000"
-            BorderBrush="#E1E4E8"
-            BorderThickness="1"
-            CornerRadius="8"
-            Padding="15">
+                    <!-- Keyboard Accessibility -->
+                    <Border
+                        Background="#000000"
+                        BorderBrush="#444444"
+                        BorderThickness="1"
+                        CornerRadius="8"
+                        Padding="15">
 
-            <StackPanel Spacing="10">
+                        <StackPanel Spacing="8">
 
-                <TextBlock
-                    Text="Colour Contrast"
-                    FontSize="20"
-                    FontWeight="Bold"/>
+                            <TextBlock
+                                Text="Keyboard Accessibility"
+                                FontSize="20"
+                                FontWeight="Bold"
+                                Foreground="White"/>
 
-                <TextBlock
-                    x:Name="ContrastSummaryTextBlock"
-                    FontSize="16"/>
+                            <TextBlock
+                                x:Name="KeyboardSummaryTextBlock"
+                                FontSize="16"
+                                Foreground="White"/>
+
+                            <Expander
+                                x:Name="KeyboardExpander"
+                                Header="View issues"
+                                Foreground="White"
+                                IsVisible="False">
+
+                                <StackPanel
+                                    x:Name="KeyboardIssuesPanel"
+                                    Spacing="5"
+                                    Margin="10,10,0,0"/>
+
+                            </Expander>
+
+                        </StackPanel>
+
+                    </Border>
 
 
-                <ScrollViewer
-                    MaxHeight="300">
+                    <!-- Responsive Design -->
+                    <Border
+                        Background="#000000"
+                        BorderBrush="#444444"
+                        BorderThickness="1"
+                        CornerRadius="8"
+                        Padding="15">
 
-                    <StackPanel
-                        x:Name="ContrastFailuresPanel"
-                        Spacing="10"/>
+                        <StackPanel Spacing="8">
 
-                </ScrollViewer>
+                            <TextBlock
+                                Text="Responsive Design"
+                                FontSize="20"
+                                FontWeight="Bold"
+                                Foreground="White"/>
 
-            </StackPanel>
+                            <TextBlock
+                                x:Name="ResponsiveSummaryTextBlock"
+                                FontSize="16"
+                                Foreground="White"/>
 
-        </Border>
+                            <Expander
+                                x:Name="ResponsiveExpander"
+                                Header="View issues"
+                                Foreground="White"
+                                IsVisible="False">
 
-    </StackPanel>
+                                <StackPanel
+                                    x:Name="ResponsiveIssuesPanel"
+                                    Spacing="5"
+                                    Margin="10,10,0,0"/>
 
-</Border>
+                            </Expander>
+
+                        </StackPanel>
+
+                    </Border>
+
+
+                    <!-- Colour Contrast -->
+                    <Border
+                        Background="#000000"
+                        BorderBrush="#444444"
+                        BorderThickness="1"
+                        CornerRadius="8"
+                        Padding="15">
+
+                        <StackPanel Spacing="8">
+
+                            <TextBlock
+                                Text="Colour Contrast"
+                                FontSize="20"
+                                FontWeight="Bold"
+                                Foreground="White"/>
+
+                            <TextBlock
+                                x:Name="ContrastSummaryTextBlock"
+                                FontSize="16"
+                                Foreground="White"/>
+
+                            <Expander
+                                x:Name="ContrastExpander"
+                                Header="View failures"
+                                Foreground="White"
+                                IsVisible="False">
+
+                                <ScrollViewer
+                                    MaxHeight="300">
+
+                                    <StackPanel
+                                        x:Name="ContrastFailuresPanel"
+                                        Spacing="10"
+                                        Margin="10,10,0,0"/>
+
+                                </ScrollViewer>
+
+                            </Expander>
+
+                        </StackPanel>
+
+                    </Border>
+
+                </StackPanel>
+
+            </Border>
 
         </StackPanel>
     </ScrollViewer>
