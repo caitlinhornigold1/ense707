@@ -5,3 +5,4 @@ The goal of this project is to create a program that reliably analyses the conte
 ## Links
 
 - [Trello](https://trello.com/b/9gHzKy06/software-quality-assurance)
+- [GitDiagram](https://gitdiagram.com/caitlinhornigold1/ense707)
