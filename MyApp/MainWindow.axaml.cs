@@ -51,111 +51,161 @@ public partial class MainWindow : Window
     {
         ReportPanel.IsVisible = true;
 
-        WebsiteTextBlock.Text = $"Website: {report.Uri}";
+        // Website
+        WebsiteTextBlock.Text =
+            $"Website: {report.Uri}";
 
+
+        // Score
         ScoreTextBlock.Text =
             $"Accessibility Score: {report.FinalScore:F1}";
+
+
+        // =========================
+        // ALT TEXT
+        // =========================
 
         AltTextTextBlock.Text =
             $"Missing alt attributes: {report.MissedAltAttributes}";
 
-        ContrastSummaryTextBlock.Text =
-            $"Contrast failures: {report.ContrastFailures.Count}";
+        AltTextIssuesPanel.Children.Clear();
+
+        if (report.AltTextIssueDescriptions.Count > 0)
+        {
+            AltTextExpander.IsVisible = true;
+
+            foreach (var issue in report.AltTextIssueDescriptions)
+            {
+                AltTextIssuesPanel.Children.Add(new TextBlock
+                {
+                    Text = $"• {issue}",
+                    FontSize = 15,
+                    Foreground = Avalonia.Media.Brushes.White,
+                    TextWrapping = Avalonia.Media.TextWrapping.Wrap,
+                    Margin = new Avalonia.Thickness(0, 5, 0, 5)
+                });
+            }
+        }
+        else
+        {
+            AltTextExpander.IsVisible = false;
+        }
+
+
+        // =========================
+        // KEYBOARD ACCESSIBILITY
+        // =========================
 
         KeyboardSummaryTextBlock.Text =
             $"Keyboard accessibility issues: {report.KeyboardIssues}";
 
         KeyboardIssuesPanel.Children.Clear();
 
-        if (report.KeyboardIssueDescriptions.Count == 0)
+        if (report.KeyboardIssueDescriptions.Count > 0)
         {
-             KeyboardIssuesPanel.Children.Add(new TextBlock
-            {
-                Text = "✓ No keyboard accessibility issues detected.",
-                FontSize = 16
-            });
-        }
-        else
-        {
+            KeyboardExpander.IsVisible = true;
+
             foreach (var issue in report.KeyboardIssueDescriptions)
             {
-                 KeyboardIssuesPanel.Children.Add(new TextBlock
+                KeyboardIssuesPanel.Children.Add(new TextBlock
                 {
                     Text = $"• {issue}",
                     FontSize = 15,
+                    Foreground = Avalonia.Media.Brushes.White,
                     TextWrapping = Avalonia.Media.TextWrapping.Wrap,
                     Margin = new Avalonia.Thickness(0, 5, 0, 5)
                 });
             }
         }
-
-        ResponsiveSummaryTextBlock.Text = $"Responsive design issues: {report.ResponsiveIssues}"; 
-        
-        ResponsiveIssuesPanel.Children.Clear(); 
-        
-        if (report.ResponsiveIssueDescriptions.Count == 0) 
-        { 
-            ResponsiveIssuesPanel.Children.Add(new TextBlock 
-            { 
-                Text = "✓ No potential responsive design issues detected.", 
-                FontSize = 16 
-            }); 
-        } 
-        else 
-        { 
-            foreach (var issue in report.ResponsiveIssueDescriptions) 
-            { 
-                ResponsiveIssuesPanel.Children.Add(new TextBlock 
-                { 
-                    Text = $"• {issue}", 
-                    FontSize = 15, 
-                    TextWrapping = Avalonia.Media.TextWrapping.Wrap, 
-                    Margin = new Avalonia.Thickness(0, 5, 0, 5) 
-                }); 
-            } 
+        else
+        {
+            KeyboardExpander.IsVisible = false;
         }
 
 
+        // =========================
+        // RESPONSIVE DESIGN
+        // =========================
 
-       ContrastSummaryTextBlock.Text =
-    $"Contrast failures: {report.ContrastFailures.Count}";
+        ResponsiveSummaryTextBlock.Text =
+            $"Responsive design issues: {report.ResponsiveIssues}";
 
-ContrastFailuresPanel.Children.Clear();
+        ResponsiveIssuesPanel.Children.Clear();
 
-foreach (var failure in report.ContrastFailures)
-{
-    var failurePanel = new StackPanel
-    {
-        Spacing = 5
-    };
+        if (report.ResponsiveIssueDescriptions.Count > 0)
+        {
+            ResponsiveExpander.IsVisible = true;
 
-    failurePanel.Children.Add(new TextBlock
-    {
-        Text = $"Element: {failure.ElementTag}",
-        FontWeight = Avalonia.Media.FontWeight.Bold,
-        Foreground = Avalonia.Media.Brushes.Black
-    });
+            foreach (var issue in report.ResponsiveIssueDescriptions)
+            {
+                ResponsiveIssuesPanel.Children.Add(new TextBlock
+                {
+                    Text = $"• {issue}",
+                    FontSize = 15,
+                    Foreground = Avalonia.Media.Brushes.White,
+                    TextWrapping = Avalonia.Media.TextWrapping.Wrap,
+                    Margin = new Avalonia.Thickness(0, 5, 0, 5)
+                });
+            }
+        }
+        else
+        {
+            ResponsiveExpander.IsVisible = false;
+        }
 
-    failurePanel.Children.Add(new TextBlock
-    {
-        Text = $"Text: {failure.TextSnippet}",
-        TextWrapping = Avalonia.Media.TextWrapping.Wrap,
-        Foreground = Avalonia.Media.Brushes.Black
-    });
 
-    failurePanel.Children.Add(new TextBlock
-    {
-        Text = $"Text colour: {failure.TextColour}",
-        Foreground = Avalonia.Media.Brushes.Black
-    });
+        // =========================
+        // COLOUR CONTRAST
+        // =========================
 
-    failurePanel.Children.Add(new TextBlock
-    {
-        Text = $"Background colour: {failure.BackgroundColour}",
-        Foreground = Avalonia.Media.Brushes.Black
-    });
+        ContrastSummaryTextBlock.Text =
+            $"Contrast failures: {report.ContrastFailures.Count}";
 
-    ContrastFailuresPanel.Children.Add(failurePanel);
-}
+        ContrastFailuresPanel.Children.Clear();
+
+        if (report.ContrastFailures.Count > 0)
+        {
+            ContrastExpander.IsVisible = true;
+
+            foreach (var failure in report.ContrastFailures)
+            {
+                var failurePanel = new StackPanel
+                {
+                    Spacing = 5
+                };
+
+                failurePanel.Children.Add(new TextBlock
+                {
+                    Text = $"Element: {failure.ElementTag}",
+                    FontWeight = Avalonia.Media.FontWeight.Bold,
+                    Foreground = Avalonia.Media.Brushes.Black
+                });
+
+                failurePanel.Children.Add(new TextBlock
+                {
+                    Text = $"Text: {failure.TextSnippet}",
+                    TextWrapping = Avalonia.Media.TextWrapping.Wrap,
+                    Foreground = Avalonia.Media.Brushes.Black
+                });
+
+                failurePanel.Children.Add(new TextBlock
+                {
+                    Text = $"Text colour: {failure.TextColour}",
+                    Foreground = Avalonia.Media.Brushes.Black
+                });
+
+                failurePanel.Children.Add(new TextBlock
+                {
+                    Text = $"Background colour: {failure.BackgroundColour}",
+                    Foreground = Avalonia.Media.Brushes.Black
+                });
+
+                ContrastFailuresPanel.Children.Add(failurePanel);
+            }
+        }
+        else
+        {
+            ContrastExpander.IsVisible = false;
+        }
     }
 }
