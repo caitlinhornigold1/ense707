@@ -24,7 +24,9 @@ public class colourUtils
         var failures = new List<ContrastFailure>();
 
         // headless DOM
-        var config = Configuration.Default.WithCss();
+        var config = Configuration.Default
+            .WithCss()
+            .With(new AngleSharp.Css.DefaultRenderDevice()); // First attempted fix
         var context = BrowsingContext.New(config);
 
         // allow AngleSharp to resolve relative links
@@ -50,8 +52,16 @@ public class colourUtils
             bool hasDirectText = element.ChildNodes.Any(n => n.NodeType == NodeType.Text && !string.IsNullOrWhiteSpace(n.TextContent));
             if (!hasDirectText) continue;
 
-            var style = window.GetComputedStyle(element);
-            string textColourStr = style.GetPropertyValue("color");
+            string textColourStr;
+            try // current working fix though it's not nice :( - Replace
+            {
+                textColourStr = window.GetComputedStyle(element).GetPropertyValue("color");
+            }
+            catch (ArgumentException)
+            {
+                continue;
+            }
+
             string bgColourStr = GetEffectiveBackground(element, window);
 
             try
@@ -91,8 +101,16 @@ public class colourUtils
         IElement? current = element;
         while (current != null)
         {
-            var style = window.GetComputedStyle(current);
-            string bg = style.GetPropertyValue("background-color");
+            string bg;
+            try
+            {
+                bg = window.GetComputedStyle(current).GetPropertyValue("background-color");
+            }
+            catch (ArgumentException)
+            {
+                current = current.ParentElement;
+                continue;
+            }
 
             // angleSharp transparent = rgba(0, 0, 0, 0)
             if (!string.IsNullOrWhiteSpace(bg) && !IsTransparent(bg))
