@@ -1,7 +1,6 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using AccessibilityAnalyser.Core;
-//using AccessibilityAnalyser.altdetect;
 using AngleSharp.Css.Dom;
 using Xunit;
 using AccessibilityAnalyser.Core.Rules;

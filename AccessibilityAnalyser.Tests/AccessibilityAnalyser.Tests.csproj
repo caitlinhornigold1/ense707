@@ -21,7 +21,6 @@
 
   <ItemGroup>
 	  <ProjectReference Include="..\AccessibilityAnalyser.Core\AccessibilityAnalyser.Core.csproj" />
-	  <ProjectReference Include="..\AccessibilityAnalyser.altdetect\AccessibilityAnalyser.altdetect.csproj" />
   </ItemGroup>
 
 </Project>
