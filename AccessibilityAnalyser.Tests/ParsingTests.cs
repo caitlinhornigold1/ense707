@@ -110,4 +110,22 @@ public class ParsingTests
         Assert.True(rule.IsTitleMissing(docWithoutTitle));
         Assert.False(rule.IsTitleMissing(docWithTitle));
     }
+        [Fact]
+    public async Task MissingLanguageRule_ReportsWhenLangIsMissing()
+    {
+        var htmlWithoutLang = "<html><head><title>Test</title></head><body></body></html>";
+        var htmlWithLang = "<html lang='en'><head><title>Test</title></head><body></body></html>";
+        var htmlWithEmptyLang = "<html lang=''><head><title>Test</title></head><body></body></html>";
+
+        var parser = new HtmlParser();
+        var rule = new MissingLanguageRule();
+
+        var docWithoutLang = await parser.ParseAsync(htmlWithoutLang);
+        var docWithLang = await parser.ParseAsync(htmlWithLang);
+        var docWithEmptyLang = await parser.ParseAsync(htmlWithEmptyLang);
+
+        Assert.True(rule.IsLanguageMissing(docWithoutLang));
+        Assert.False(rule.IsLanguageMissing(docWithLang));
+        Assert.True(rule.IsLanguageMissing(docWithEmptyLang));
+    }
 }

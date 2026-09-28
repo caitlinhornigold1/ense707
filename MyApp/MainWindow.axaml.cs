@@ -12,40 +12,46 @@ public partial class MainWindow : Window
         InitializeComponent();
     }
 
-    private async void RunButton_Click(object? sender, RoutedEventArgs e)
+private async void RunButton_Click(object? sender, RoutedEventArgs e)
+{
+    ErrorTextBlock.IsVisible = false;
+    ReportPanel.IsVisible = false;
+
+    var url = WebsiteUrlTextBox.Text?.Trim();
+
+    if (string.IsNullOrWhiteSpace(url))
     {
-        ErrorTextBlock.IsVisible = false;
-        ReportPanel.IsVisible = false;
-
-        var url = WebsiteUrlTextBox.Text?.Trim();
-
-        if (string.IsNullOrWhiteSpace(url))
-        {
-            ErrorTextBlock.Text = "Please enter a website URL.";
-            ErrorTextBlock.IsVisible = true;
-            return;
-        }
-
-        try
-        {
-            RunButton.IsEnabled = false;
-            RunButton.Content = "Testing...";
-
-            var report = await Report.GenerateReportAsync(url);
-
-            DisplayReport(report);
-        }
-        catch (Exception ex)
-        {
-            ErrorTextBlock.Text = $"Unable to analyse website: {ex}";
-            ErrorTextBlock.IsVisible = true;
-        }
-        finally
-        {
-            RunButton.IsEnabled = true;
-            RunButton.Content = "Run";
-        }
+        ErrorTextBlock.Text = "Please enter a website URL.";
+        ErrorTextBlock.IsVisible = true;
+        return;
     }
+
+    if (!url.StartsWith("http://") && !url.StartsWith("https://"))
+    {
+        url = "https://" + url;
+    }
+
+    try
+    {
+        RunButton.IsEnabled = false;
+        RunButton.Content = "Testing...";
+
+        var report = await Report.GenerateReportAsync(url);
+
+        DisplayReport(report);
+    }
+    catch (Exception)
+    {
+        ErrorTextBlock.Text =
+            "Unable to access this website. Please check that the URL is correct and that the website exists.";
+        ErrorTextBlock.IsVisible = true;
+    }
+    finally
+    {
+        RunButton.IsEnabled = true;
+        RunButton.Content = "Run";
+    }
+}
 
     private void DisplayReport(Report report)
     {
