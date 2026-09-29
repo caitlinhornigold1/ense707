@@ -269,6 +269,59 @@ else
 {
     DuplicateIdExpander.IsVisible = false;
 }
+// MISSING LANGUAGE
+MissingLanguageSummaryTextBlock.Text =
+    $"Missing language issues: {report.MissingLanguageIssues.Count}";
+
+MissingLanguageIssuesPanel.Children.Clear();
+
+if (report.MissingLanguageIssues.Count > 0)
+{
+    MissingLanguageExpander.IsVisible = true;
+
+    foreach (var issue in report.MissingLanguageIssues)
+    {
+        MissingLanguageIssuesPanel.Children.Add(new TextBlock
+        {
+            Text = $"• {issue}",
+            FontSize = 15,
+            Foreground = Avalonia.Media.Brushes.White,
+            TextWrapping = Avalonia.Media.TextWrapping.Wrap,
+            Margin = new Avalonia.Thickness(0, 5, 0, 5)
+        });
+    }
+}
+else
+{
+    MissingLanguageExpander.IsVisible = false;
+}
+
+// MISSING PAGE TITLE
+MissingPageTitleSummaryTextBlock.Text =
+    $"Missing page title issues: {report.MissingPageTitleIssues.Count}";
+
+MissingPageTitleIssuesPanel.Children.Clear();
+
+if (report.MissingPageTitleIssues.Count > 0)
+{
+    MissingPageTitleExpander.IsVisible = true;
+
+    foreach (var issue in report.MissingPageTitleIssues)
+    {
+        MissingPageTitleIssuesPanel.Children.Add(new TextBlock
+        {
+            Text = $"• {issue}",
+            FontSize = 15,
+            Foreground = Avalonia.Media.Brushes.White,
+            TextWrapping = Avalonia.Media.TextWrapping.Wrap,
+            Margin = new Avalonia.Thickness(0, 5, 0, 5)
+        });
+    }
+}
+else
+{
+    MissingPageTitleExpander.IsVisible = false;
+}
         // =========================
         // COLOUR CONTRAST
         // =========================

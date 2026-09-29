@@ -415,6 +415,96 @@
     </StackPanel>
 
 </Border>
+
+<!-- Language -->
+<Border
+    Background="#1E1E1E"
+    BorderBrush="#444444"
+    BorderThickness="1"
+    CornerRadius="8"
+    Padding="15">
+
+    <StackPanel Spacing="8">
+
+        <TextBlock
+            Text="Language"
+            FontSize="20"
+            FontWeight="Bold"
+            Foreground="White"/>
+
+        <TextBlock
+            x:Name="MissingLanguageSummaryTextBlock"
+            FontSize="16"
+            Foreground="White"/>
+
+        <Expander
+            x:Name="MissingLanguageExpander"
+            Header="View issues"
+            Foreground="White"
+            IsVisible="False">
+
+            <Border
+                Background="#2A2A2A"
+                CornerRadius="5"
+                Padding="10"
+                Margin="0,5,0,0">
+
+                <StackPanel
+                    x:Name="MissingLanguageIssuesPanel"
+                    Spacing="5"/>
+
+            </Border>
+
+        </Expander>
+
+    </StackPanel>
+
+</Border>
+
+<!-- Page Title -->
+<Border
+    Background="#1E1E1E"
+    BorderBrush="#444444"
+    BorderThickness="1"
+    CornerRadius="8"
+    Padding="15">
+
+    <StackPanel Spacing="8">
+
+        <TextBlock
+            Text="Page Title"
+            FontSize="20"
+            FontWeight="Bold"
+            Foreground="White"/>
+
+        <TextBlock
+            x:Name="MissingPageTitleSummaryTextBlock"
+            FontSize="16"
+            Foreground="White"/>
+
+        <Expander
+            x:Name="MissingPageTitleExpander"
+            Header="View issues"
+            Foreground="White"
+            IsVisible="False">
+
+            <Border
+                Background="#2A2A2A"
+                CornerRadius="5"
+                Padding="10"
+                Margin="0,5,0,0">
+
+                <StackPanel
+                    x:Name="MissingPageTitleIssuesPanel"
+                    Spacing="5"/>
+
+            </Border>
+
+        </Expander>
+
+    </StackPanel>
+
+</Border>
                     <!-- Colour Contrast -->
                     <Border
                         Background="#000000"

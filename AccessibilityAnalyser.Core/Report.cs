@@ -18,12 +18,15 @@ public class Report
 	public int ResponsiveIssues { get; private set; }
 	public List<string> ResponsiveIssueDescriptions { get; private set; } = new();
 
+public List<string> MissingLanguageIssues { get; private set; } = new();
 	public List<string> MalformedHtmlIssues { get; private set; } = new();
 	public List<FormElementMissingLabel> FormLabelIssues { get; private set; } = new();
 
-	public List<string> EmptyLinkIssues { get; private set; } = new();
-
 	public List<string> DuplicateIdIssues { get; private set; } = new();
+
+	public List<string> MissingPageTitleIssues { get; private set; } = new();
+
+	public List<string> EmptyLinkIssues { get; private set; } = new();
 	public List<ContrastFailure> ContrastFailures { get; private set; } = new();
 
 	public Report(string uri, string html)
@@ -131,6 +134,8 @@ report.FinalScore -= Math.Min(
     malformedIssues.Count * 2.0
 );
 
+
+
 // Run empty link analysis
 var parser = new HtmlParser();
 var document = await parser.ParseAsync(html);
@@ -169,6 +174,41 @@ foreach (var group in duplicateIds)
 report.FinalScore -= Math.Min(
     20.0,
     report.DuplicateIdIssues.Count * 2.0
+);
+
+// MISSING LANGUAGE
+var missingLanguageRule =
+    new AccessibilityAnalyser.Core.Rules.MissingLanguageRule();
+
+if (missingLanguageRule.IsLanguageMissing(document))
+{
+    report.MissingLanguageIssues.Add(
+        "The <html> element is missing a language attribute. " +
+        "Recommendation: Add a lang attribute such as lang=\"en\" " +
+        "to identify the language of the page."
+    );
+}
+
+report.FinalScore -= Math.Min(
+    20.0,
+    report.MissingLanguageIssues.Count * 2.0
+);
+
+// MISSING PAGE TITLE
+var missingPageTitleRule =
+    new AccessibilityAnalyser.Core.Rules.MissingPageTitleRule();
+
+if (missingPageTitleRule.IsTitleMissing(document))
+{
+    report.MissingPageTitleIssues.Add(
+        "The page is missing a title. " +
+        "Recommendation: Add a descriptive <title> element inside the <head> section."
+    );
+}
+
+report.FinalScore -= Math.Min(
+    20.0,
+    report.MissingPageTitleIssues.Count * 2.0
 );
 		// Run contrast analysis
 		var contrastFailures = await colourUtils.AnalyzeSiteContrastAsync(uri, html, 4.5);
