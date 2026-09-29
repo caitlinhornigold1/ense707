@@ -189,6 +189,86 @@ else
     FormLabelExpander.IsVisible = false;
 }
 
+// HTML STRUCTURE
+MalformedHtmlSummaryTextBlock.Text =
+    $"HTML structure issues: {report.MalformedHtmlIssues.Count}";
+
+MalformedHtmlIssuesPanel.Children.Clear();
+
+if (report.MalformedHtmlIssues.Count > 0)
+{
+    MalformedHtmlExpander.IsVisible = true;
+
+    foreach (var issue in report.MalformedHtmlIssues)
+    {
+        MalformedHtmlIssuesPanel.Children.Add(new TextBlock
+        {
+            Text = $"• Unclosed <{issue}> element detected.",
+            FontSize = 15,
+            Foreground = Avalonia.Media.Brushes.White,
+            TextWrapping = Avalonia.Media.TextWrapping.Wrap,
+            Margin = new Avalonia.Thickness(0, 5, 0, 5)
+        });
+    }
+}
+else
+{
+    MalformedHtmlExpander.IsVisible = false;
+}
+
+// EMPTY LINKS
+EmptyLinkSummaryTextBlock.Text =
+    $"Empty link issues: {report.EmptyLinkIssues.Count}";
+
+EmptyLinkIssuesPanel.Children.Clear();
+
+if (report.EmptyLinkIssues.Count > 0)
+{
+    EmptyLinkExpander.IsVisible = true;
+
+    foreach (var issue in report.EmptyLinkIssues)
+    {
+        EmptyLinkIssuesPanel.Children.Add(new TextBlock
+        {
+            Text = $"• {issue}",
+            FontSize = 15,
+            Foreground = Avalonia.Media.Brushes.White,
+            TextWrapping = Avalonia.Media.TextWrapping.Wrap,
+            Margin = new Avalonia.Thickness(0, 5, 0, 5)
+        });
+    }
+}
+else
+{
+    EmptyLinkExpander.IsVisible = false;
+}
+
+// DUPLICATE IDS
+DuplicateIdSummaryTextBlock.Text =
+    $"Duplicate ID issues: {report.DuplicateIdIssues.Count}";
+
+DuplicateIdIssuesPanel.Children.Clear();
+
+if (report.DuplicateIdIssues.Count > 0)
+{
+    DuplicateIdExpander.IsVisible = true;
+
+    foreach (var issue in report.DuplicateIdIssues)
+    {
+        DuplicateIdIssuesPanel.Children.Add(new TextBlock
+        {
+            Text = $"• {issue}",
+            FontSize = 15,
+            Foreground = Avalonia.Media.Brushes.White,
+            TextWrapping = Avalonia.Media.TextWrapping.Wrap,
+            Margin = new Avalonia.Thickness(0, 5, 0, 5)
+        });
+    }
+}
+else
+{
+    DuplicateIdExpander.IsVisible = false;
+}
         // =========================
         // COLOUR CONTRAST
         // =========================

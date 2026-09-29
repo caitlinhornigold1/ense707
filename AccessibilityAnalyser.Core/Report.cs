@@ -18,7 +18,12 @@ public class Report
 	public int ResponsiveIssues { get; private set; }
 	public List<string> ResponsiveIssueDescriptions { get; private set; } = new();
 
+	public List<string> MalformedHtmlIssues { get; private set; } = new();
 	public List<FormElementMissingLabel> FormLabelIssues { get; private set; } = new();
+
+	public List<string> EmptyLinkIssues { get; private set; } = new();
+
+	public List<string> DuplicateIdIssues { get; private set; } = new();
 	public List<ContrastFailure> ContrastFailures { get; private set; } = new();
 
 	public Report(string uri, string html)
@@ -113,6 +118,58 @@ foreach (System.Text.RegularExpressions.Match match in altMatches)
 			formLabelIssues.Count * 2.0
 		);
 
+// Run malformed HTML analysis
+var malformedDetector = new malformedHtml();
+
+var malformedIssues = await malformedDetector.ScanAsync(html);
+
+report.MalformedHtmlIssues = new List<string>(malformedIssues);
+
+// Adjust score based on malformed HTML issues
+report.FinalScore -= Math.Min(
+    20.0,
+    malformedIssues.Count * 2.0
+);
+
+// Run empty link analysis
+var parser = new HtmlParser();
+var document = await parser.ParseAsync(html);
+
+var emptyLinkRule = new AccessibilityAnalyser.Core.Rules.EmptyLinkRule();
+
+var emptyLinks = emptyLinkRule.FindEmptyLinks(document);
+
+foreach (var link in emptyLinks)
+{
+    report.EmptyLinkIssues.Add(
+        $"Empty link detected: <a href=\"{link.GetAttribute("href")}\"> has no accessible text or label."
+    );
+}
+
+// Adjust score based on empty link issues
+report.FinalScore -= Math.Min(
+    20.0,
+    report.EmptyLinkIssues.Count * 2.0
+);
+
+// Run duplicate ID analysis
+var duplicateIdRule =
+    new AccessibilityAnalyser.Core.Rules.DuplicateIdRule();
+
+var duplicateIds = duplicateIdRule.FindDuplicateIds(document);
+
+foreach (var group in duplicateIds)
+{
+    report.DuplicateIdIssues.Add(
+        $"Duplicate ID detected: \"{group.Key}\" is used by {group.Count()} elements."
+    );
+}
+
+// Adjust score based on duplicate ID issues
+report.FinalScore -= Math.Min(
+    20.0,
+    report.DuplicateIdIssues.Count * 2.0
+);
 		// Run contrast analysis
 		var contrastFailures = await colourUtils.AnalyzeSiteContrastAsync(uri, html, 4.5);
 		report.ContrastFailures = contrastFailures ?? new List<ContrastFailure>();
