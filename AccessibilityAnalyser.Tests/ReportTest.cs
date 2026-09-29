@@ -14,32 +14,21 @@ namespace AccessibilityAnalyser.Tests
             var report = await Report.GenerateReportAsync("https://www.midasgroup.online/constrast");
             Assert.True(report.ContrastFailures.Count >= 1,
                 "The live page should still contain at least one low-contrast element as a smoke test.");
-        }
-         [Fact]
-        public async Task FormLabels()
-        {
-            var report = await Report.GenerateReportAsync("https://www.midasgroup.online/constrast");
-
-            Assert.True(
-                report.FormLabelIssues.Count >= 1,
+          
+            Assert.True(report.FormLabelIssues.Count >= 1,
                 "The live page should contain at least one form element with a missing or empty label as a smoke test.");
+            
+            Assert.True(report.KeyboardIssues >= 1,
+                "The live page should contain at least one keyboard accessibility issue as a smoke test.");
+            
+            Assert.True(report.MissedAltAttributes >= 1,
+                "The live page should contain at least one image with a missing or empty alt attribute as a smoke test.");
+       
+            Assert.True(report.ResponsiveIssues >= 1,
+                "The live page should contain at least one responsive design issue as a smoke test.");
+
         }
-        
-        // If you run the test like this it will repeatedly request the site and massively increase
-        // test run time
 
-        //  [Fact]
-        // public async Task FormLabels()
-        // {
-        //     var report = await Report.GenerateReportAsync("https://www.midasgroup.online/constrast");
-
-        //     Assert.True(
-        //         report.FormLabelIssues.Count >= 1,
-        //         "The live page should contain at least one form element with a missing or empty label as a smoke test.");
-        // }
     }
-
-
-      
-    
+ 
 }
