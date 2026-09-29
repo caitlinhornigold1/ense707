@@ -17,6 +17,8 @@ public class Report
 
 	public int ResponsiveIssues { get; private set; }
 	public List<string> ResponsiveIssueDescriptions { get; private set; } = new();
+
+	public List<FormElementMissingLabel> FormLabelIssues { get; private set; } = new();
 	public List<ContrastFailure> ContrastFailures { get; private set; } = new();
 
 	public Report(string uri, string html)
@@ -97,6 +99,19 @@ foreach (System.Text.RegularExpressions.Match match in altMatches)
 		report.ResponsiveIssueDescriptions = new List<string>(responsiveDetector.IssueDescriptions); 
 		// Adjust score based on responsive issues 
 		report.FinalScore -= Math.Min(20.0, responsiveIssues * 2.0);
+
+		// Run form label analysis
+		var formLabelDetector = new FormLabelDetection();
+
+		var formLabelIssues = await formLabelDetector.ScanAsync(html);
+
+		report.FormLabelIssues = formLabelIssues;
+
+		// Adjust score based on form label issues
+		report.FinalScore -= Math.Min(
+			20.0,
+			formLabelIssues.Count * 2.0
+		);
 
 		// Run contrast analysis
 		var contrastFailures = await colourUtils.AnalyzeSiteContrastAsync(uri, html, 4.5);
