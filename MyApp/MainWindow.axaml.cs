@@ -159,6 +159,35 @@ private async void RunButton_Click(object? sender, RoutedEventArgs e)
             ResponsiveExpander.IsVisible = false;
         }
 
+// FORM LABELS
+FormLabelSummaryTextBlock.Text =
+    $"Form label issues: {report.FormLabelIssues.Count}";
+
+FormLabelIssuesPanel.Children.Clear();
+
+if (report.FormLabelIssues.Count > 0)
+{
+    FormLabelExpander.IsVisible = true;
+
+    foreach (var issue in report.FormLabelIssues)
+    {
+        FormLabelIssuesPanel.Children.Add(new TextBlock
+        {
+            Text =
+                $"• {issue.TagName} " +
+                $"(Type: {issue.Type}, ID: {issue.Id}, Name: {issue.Name}) " +
+                "does not have an accessible label.",
+            FontSize = 15,
+            Foreground = Avalonia.Media.Brushes.White,
+            TextWrapping = Avalonia.Media.TextWrapping.Wrap,
+            Margin = new Avalonia.Thickness(0, 5, 0, 5)
+        });
+    }
+}
+else
+{
+    FormLabelExpander.IsVisible = false;
+}
 
         // =========================
         // COLOUR CONTRAST
