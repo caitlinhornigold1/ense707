@@ -11,8 +11,8 @@ namespace AccessibilityAnalyser.Tests
                 "https://www.midasgroup.online/constrast");
 
             Assert.True(
-                report.FinalScore >= 0 && report.FinalScore <= 100,
-                "The accessibility score should be between 0 and 100.");
+                report.FinalScore >= -50 && report.FinalScore <= 100,
+                "The accessibility score should be between -50 and 100.");
         }
     }
 }

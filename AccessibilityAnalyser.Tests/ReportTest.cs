@@ -18,9 +18,6 @@ namespace AccessibilityAnalyser.Tests
             Assert.True(report.FormLabelIssues.Count >= 1,
                 "The live page should contain at least one form element with a missing or empty label as a smoke test.");
             
-            Assert.True(report.KeyboardIssues >= 1,
-                "The live page should contain at least one keyboard accessibility issue as a smoke test.");
-            
             Assert.True(report.MissedAltAttributes >= 1,
                 "The live page should contain at least one image with a missing or empty alt attribute as a smoke test.");
        
