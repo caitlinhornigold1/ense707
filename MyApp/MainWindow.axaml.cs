@@ -375,26 +375,26 @@ else
                 {
                     Text = $"Element: {failure.ElementTag}",
                     FontWeight = Avalonia.Media.FontWeight.Bold,
-                    Foreground = Avalonia.Media.Brushes.Black
+                    Foreground = Avalonia.Media.Brushes.White
                 });
 
                 failurePanel.Children.Add(new TextBlock
                 {
                     Text = $"Text: {failure.TextSnippet}",
                     TextWrapping = Avalonia.Media.TextWrapping.Wrap,
-                    Foreground = Avalonia.Media.Brushes.Black
+                    Foreground = Avalonia.Media.Brushes.White
                 });
 
                 failurePanel.Children.Add(new TextBlock
                 {
                     Text = $"Text colour: {failure.TextColour}",
-                    Foreground = Avalonia.Media.Brushes.Black
+                    Foreground = Avalonia.Media.Brushes.White
                 });
 
                 failurePanel.Children.Add(new TextBlock
                 {
                     Text = $"Background colour: {failure.BackgroundColour}",
-                    Foreground = Avalonia.Media.Brushes.Black
+                    Foreground = Avalonia.Media.Brushes.White
                 });
 
                 ContrastFailuresPanel.Children.Add(failurePanel);

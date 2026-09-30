@@ -131,6 +131,7 @@
                                 x:Name="AltTextExpander"
                                 Header="View issues"
                                 Foreground="White"
+                                Background="Black"
                                 IsVisible="False">
 
                                 <StackPanel
@@ -170,6 +171,7 @@
                                 x:Name="KeyboardExpander"
                                 Header="View issues"
                                 Foreground="White"
+                                Background="Black"
                                 IsVisible="False">
 
                                 <StackPanel
@@ -209,6 +211,7 @@
                                 x:Name="ResponsiveExpander"
                                 Header="View issues"
                                 Foreground="White"
+                                Background="Black"
                                 IsVisible="False">
 
                                 <StackPanel
@@ -224,7 +227,7 @@
 
                     <!-- Form Labels -->
                     <Border
-                        Background="#1E1E1E"
+                        Background="Black"
                         BorderBrush="#444444"
                         BorderThickness="1"
                         CornerRadius="8"
@@ -247,64 +250,16 @@
                             x:Name="FormLabelExpander"
                             Header="View issues"
                             Foreground="White"
+                            Background="Black"
                             IsVisible="False">
 
-                            <Border
-                                Background="#2A2A2A"
-                                CornerRadius="5"
-                                Padding="10"
-                                Margin="0,5,0,0">
+                            
 
                                 <StackPanel
                                     x:Name="FormLabelIssuesPanel"
                                     Spacing="5"/>
 
-                            </Border>
-
-                        </Expander>
-
-                        </StackPanel>
-
-                    </Border>
-
-                    <!-- HTML Structure -->
-                    <Border
-                        Background="#1E1E1E"
-                        BorderBrush="#444444"
-                        BorderThickness="1"
-                        CornerRadius="8"
-                        Padding="15">
-
-                        <StackPanel Spacing="8">
-
-                        <TextBlock
-                            Text="HTML Structure"
-                            FontSize="20"
-                            FontWeight="Bold"
-                            Foreground="White"/>
-
-                        <TextBlock
-                            x:Name="MalformedHtmlSummaryTextBlock"
-                            FontSize="16"
-                            Foreground="White"/>
-
-                        <Expander
-                            x:Name="MalformedHtmlExpander"
-                            Header="View issues"
-                            Foreground="White"
-                            IsVisible="False">
-
-                            <Border
-                                Background="#2A2A2A"
-                                CornerRadius="5"
-                                Padding="10"
-                                Margin="0,5,0,0">
-
-                            <StackPanel
-                                x:Name="MalformedHtmlIssuesPanel"
-                                Spacing="5"/>
-
-                            </Border>
+                            
 
                         </Expander>
 
@@ -314,7 +269,7 @@
 
                     <!-- Empty Links -->
                     <Border
-                        Background="#1E1E1E"
+                        Background="Black"
                         BorderBrush="#444444"
                         BorderThickness="1"
                         CornerRadius="8"
@@ -337,19 +292,16 @@
                             x:Name="EmptyLinkExpander"
                             Header="View issues"
                             Foreground="White"
+                            Background="Black"
                             IsVisible="False">
 
-                            <Border
-                                Background="#2A2A2A"
-                                CornerRadius="5"
-                                Padding="10"
-                                Margin="0,5,0,0">
+                            
 
                             <StackPanel
                                 x:Name="EmptyLinkIssuesPanel"
                                 Spacing="5"/>
 
-                            </Border>
+                            
 
                         </Expander>
 
@@ -357,54 +309,11 @@
 
                     </Border>
 
-                    <!-- Duplicate IDs -->
-                    <Border
-                        Background="#1E1E1E"
-                        BorderBrush="#444444"
-                        BorderThickness="1"
-                        CornerRadius="8"
-                        Padding="15">
 
-                        <StackPanel Spacing="8">
-
-                        <TextBlock
-                            Text="Duplicate IDs"
-                            FontSize="20"
-                            FontWeight="Bold"
-                            Foreground="White"/>
-
-                        <TextBlock
-                            x:Name="DuplicateIdSummaryTextBlock"
-                            FontSize="16"
-                            Foreground="White"/>
-
-                        <Expander
-                            x:Name="DuplicateIdExpander"
-                            Header="View issues"
-                            Foreground="White"
-                            IsVisible="False">
-
-                            <Border
-                                Background="#2A2A2A"
-                                CornerRadius="5"
-                                Padding="10"
-                                Margin="0,5,0,0">
-
-                            <StackPanel
-                                x:Name="DuplicateIdIssuesPanel"
-                                Spacing="5"/>
-
-                            </Border>
-
-                        </Expander>
-
-                        </StackPanel>
-
-                    </Border>
 
                     <!-- Language -->
                     <Border
-                        Background="#1E1E1E"
+                        Background="Black"
                         BorderBrush="#444444"
                         BorderThickness="1"
                         CornerRadius="8"
@@ -427,19 +336,16 @@
                             x:Name="MissingLanguageExpander"
                             Header="View issues"
                             Foreground="White"
+                            Background="Black"
                             IsVisible="False">
 
-                            <Border
-                                Background="#2A2A2A"
-                                CornerRadius="5"
-                                Padding="10"
-                                Margin="0,5,0,0">
+                            
 
                             <StackPanel
                                 x:Name="MissingLanguageIssuesPanel"
                                 Spacing="5"/>
 
-                            </Border>
+                            
 
                         </Expander>
 
@@ -449,7 +355,7 @@
 
                     <!-- Page Title -->
                     <Border
-                        Background="#1E1E1E"
+                        Background="Black"
                         BorderBrush="#444444"
                         BorderThickness="1"
                         CornerRadius="8"
@@ -472,19 +378,16 @@
                             x:Name="MissingPageTitleExpander"
                             Header="View issues"
                             Foreground="White"
+                            Background="Black"
                             IsVisible="False">
 
-                            <Border
-                                Background="#2A2A2A"
-                                CornerRadius="5"
-                                Padding="10"
-                                Margin="0,5,0,0">
+                            
 
                             <StackPanel
                                 x:Name="MissingPageTitleIssuesPanel"
                                 Spacing="5"/>
 
-                            </Border>
+                            
 
                         </Expander>
 
@@ -494,7 +397,7 @@
 
                     <!-- Button and Link Labels -->
                     <Border
-                        Background="#1E1E1E"
+                        Background="Black"
                         BorderBrush="#444444"
                         BorderThickness="1"
                         CornerRadius="8"
@@ -517,19 +420,16 @@
                             x:Name="ButtonTextExpander"
                             Header="View issues"
                             Foreground="White"
+                            Background="Black"
                             IsVisible="False">
 
-                            <Border
-                                Background="#2A2A2A"
-                                CornerRadius="5"
-                                Padding="10"
-                                Margin="0,5,0,0">
+                            
 
                             <StackPanel
                                 x:Name="ButtonTextIssuesPanel"
                                 Spacing="5"/>
 
-                            </Border>
+                            
 
                         </Expander>
 
@@ -562,17 +462,112 @@
                             x:Name="ContrastExpander"
                             Header="View failures"
                             Foreground="White"
+                            Background="Black"
                             IsVisible="False">
 
-                            <ScrollViewer
-                                MaxHeight="300">
+                            
 
                                 <StackPanel
                                     x:Name="ContrastFailuresPanel"
-                                    Spacing="10"
-                                    Margin="10,10,0,0"/>
+                                    Spacing="5"/>
 
-                            </ScrollViewer>
+                            
+
+                        </Expander>
+
+                        </StackPanel>
+
+                    </Border>
+                <!-- text here -->
+
+                <StackPanel Spacing="5">
+
+                        <TextBlock
+                            Text="the below tests do not affect the overall score, but are still important for accessibility"
+                            FontSize="18"
+                            FontWeight="Bold"
+                            Foreground="Black"/>
+
+                    </StackPanel>
+
+                    <!-- HTML Structure -->
+                    <Border
+                        Background="Black"
+                        BorderBrush="#444444"
+                        BorderThickness="1"
+                        CornerRadius="8"
+                        Padding="15">
+
+                        <StackPanel Spacing="8">
+
+                        <TextBlock
+                            Text="HTML Structure"
+                            FontSize="20"
+                            FontWeight="Bold"
+                            Foreground="White"/>
+
+                        <TextBlock
+                            x:Name="MalformedHtmlSummaryTextBlock"
+                            FontSize="16"
+                            Foreground="White"/>
+
+                        <Expander
+                            x:Name="MalformedHtmlExpander"
+                            Header="View issues"
+                            Foreground="White"
+                            Background="Black"
+                            IsVisible="False">
+
+                            
+
+                            <StackPanel
+                                x:Name="MalformedHtmlIssuesPanel"
+                                Spacing="5"/>
+
+                            
+
+                        </Expander>
+
+                        </StackPanel>
+
+                    </Border>
+
+
+                    <!-- Duplicate IDs -->
+                    <Border
+                        Background="Black"
+                        BorderBrush="#444444"
+                        BorderThickness="1"
+                        CornerRadius="8"
+                        Padding="15">
+
+                        <StackPanel Spacing="8">
+
+                        <TextBlock
+                            Text="Duplicate IDs"
+                            FontSize="20"
+                            FontWeight="Bold"
+                            Foreground="White"/>
+
+                        <TextBlock
+                            x:Name="DuplicateIdSummaryTextBlock"
+                            FontSize="16"
+                            Foreground="White"/>
+
+                        <Expander
+                            x:Name="DuplicateIdExpander"
+                            Header="View issues"
+                            Foreground="White"
+                            Background="Black"
+                            IsVisible="False">
+
+                            
+
+                            <StackPanel
+                                x:Name="DuplicateIdIssuesPanel"
+                                Spacing="5"/>
+
+                            
 
                         </Expander>
 
