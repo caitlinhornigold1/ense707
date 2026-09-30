@@ -72,9 +72,7 @@ private async void RunButton_Click(object? sender, RoutedEventArgs e)
             $"Level AA: {report.LevelAAPassed}/{report.LevelAATested}).";
 
 
-        // =========================
-        // ALT TEXT
-        // =========================
+        // Alt text
 
         AltTextTextBlock.Text =
             $"Missing alt attributes: {report.MissedAltAttributes}";
@@ -103,9 +101,7 @@ private async void RunButton_Click(object? sender, RoutedEventArgs e)
         }
 
 
-        // =========================
-        // KEYBOARD ACCESSIBILITY
-        // =========================
+        // Keyboard accessibility
 
         KeyboardSummaryTextBlock.Text =
             $"Keyboard accessibility issues: {report.KeyboardIssues}";
@@ -134,9 +130,7 @@ private async void RunButton_Click(object? sender, RoutedEventArgs e)
         }
 
 
-        // =========================
-        // RESPONSIVE DESIGN
-        // =========================
+        // Responsive design
 
         ResponsiveSummaryTextBlock.Text =
             $"Responsive design issues: {report.ResponsiveIssues}";
@@ -164,7 +158,7 @@ private async void RunButton_Click(object? sender, RoutedEventArgs e)
             ResponsiveExpander.IsVisible = false;
         }
 
-// FORM LABELS
+// form labels
 FormLabelSummaryTextBlock.Text =
     $"Form label issues: {report.FormLabelIssues.Count}";
 
@@ -194,7 +188,7 @@ else
     FormLabelExpander.IsVisible = false;
 }
 
-// HTML STRUCTURE
+// html structure
 MalformedHtmlSummaryTextBlock.Text =
     $"HTML structure issues: {report.MalformedHtmlIssues.Count}";
 
@@ -221,7 +215,7 @@ else
     MalformedHtmlExpander.IsVisible = false;
 }
 
-// EMPTY LINKS
+// empty links
 EmptyLinkSummaryTextBlock.Text =
     $"Empty link issues: {report.EmptyLinkIssues.Count}";
 
@@ -248,7 +242,7 @@ else
     EmptyLinkExpander.IsVisible = false;
 }
 
-// DUPLICATE IDS
+// duplicate IDs
 DuplicateIdSummaryTextBlock.Text =
     $"Duplicate ID issues: {report.DuplicateIdIssues.Count}";
 
@@ -274,7 +268,7 @@ else
 {
     DuplicateIdExpander.IsVisible = false;
 }
-// MISSING LANGUAGE
+//missing lang tag
 MissingLanguageSummaryTextBlock.Text =
     $"Missing language issues: {report.MissingLanguageIssues.Count}";
 
@@ -301,7 +295,7 @@ else
     MissingLanguageExpander.IsVisible = false;
 }
 
-// MISSING PAGE TITLE
+// missing page title
 MissingPageTitleSummaryTextBlock.Text =
     $"Missing page title issues: {report.MissingPageTitleIssues.Count}";
 
@@ -328,7 +322,7 @@ else
     MissingPageTitleExpander.IsVisible = false;
 }
 
-// BUTTON AND LINK LABELS
+// button labels
 ButtonTextSummaryTextBlock.Text =
     $"Button and link label issues: {report.ButtonTextIssues}";
 
@@ -359,9 +353,7 @@ else
 {
     ButtonTextExpander.IsVisible = false;
 }
-        // =========================
-        // COLOUR CONTRAST
-        // =========================
+        // colour contrast
 
         ContrastSummaryTextBlock.Text =
             $"Contrast failures: {report.ContrastFailures.Count}";
