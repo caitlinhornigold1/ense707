@@ -10,6 +10,19 @@ public class Report
 	public string Uri { get; init; }
 	public string Html { get; init; }
 	public double FinalScore { get; private set; }
+
+
+public int TestedCriteria { get; private set; }
+
+public int PassedCriteria { get; private set; }
+
+public int LevelATested { get; private set; }
+
+public int LevelAPassed { get; private set; }
+
+public int LevelAATested { get; private set; }
+
+public int LevelAAPassed { get; private set; }
 	public int MissedAltAttributes { get; private set; }
 	public List<string> AltTextIssueDescriptions { get; private set; } = new();
 	public int KeyboardIssues { get; private set; }
@@ -86,12 +99,6 @@ foreach (System.Text.RegularExpressions.Match match in altMatches)
     }
 }
 
-		if (missingAlts == 0)
-			report.FinalScore += 15.0;
-		else if (missingAlts == 1)
-			report.FinalScore += 10.0;
-		else
-			report.FinalScore -= 5.0;
 
 		// Run keyboard accessibility analysis
 		var keyboardDetector = new KeyboardDetection();
@@ -102,16 +109,13 @@ foreach (System.Text.RegularExpressions.Match match in altMatches)
 			keyboardDetector.IssueDescriptions
 		);
 
-		// Adjust score based on keyboard issues
-		report.FinalScore -= Math.Min(20.0, keyboardIssues * 2.0);
+
 
 		// Run responsive design analysis 
 		var responsiveDetector = new ResponsiveDetection(); 
 		int responsiveIssues = responsiveDetector.Scan(html); 
 		report.ResponsiveIssues = responsiveIssues; 
 		report.ResponsiveIssueDescriptions = new List<string>(responsiveDetector.IssueDescriptions); 
-		// Adjust score based on responsive issues 
-		report.FinalScore -= Math.Min(20.0, responsiveIssues * 2.0);
 
 		// Run form label analysis
 		var formLabelDetector = new FormLabelDetection();
@@ -120,11 +124,6 @@ foreach (System.Text.RegularExpressions.Match match in altMatches)
 
 		report.FormLabelIssues = formLabelIssues;
 
-		// Adjust score based on form label issues
-		report.FinalScore -= Math.Min(
-			20.0,
-			formLabelIssues.Count * 2.0
-		);
 
 // Run malformed HTML analysis
 var malformedDetector = new malformedHtml();
@@ -133,11 +132,6 @@ var malformedIssues = await malformedDetector.ScanAsync(html);
 
 report.MalformedHtmlIssues = new List<string>(malformedIssues);
 
-// Adjust score based on malformed HTML issues
-report.FinalScore -= Math.Min(
-    20.0,
-    malformedIssues.Count * 2.0
-);
 
 
 
@@ -156,11 +150,6 @@ foreach (var link in emptyLinks)
     );
 }
 
-// Adjust score based on empty link issues
-report.FinalScore -= Math.Min(
-    20.0,
-    report.EmptyLinkIssues.Count * 2.0
-);
 
 // Run duplicate ID analysis
 var duplicateIdRule =
@@ -175,11 +164,6 @@ foreach (var group in duplicateIds)
     );
 }
 
-// Adjust score based on duplicate ID issues
-report.FinalScore -= Math.Min(
-    20.0,
-    report.DuplicateIdIssues.Count * 2.0
-);
 
 // BUTTON AND LINK TEXT
 var buttonTextDetector = new ButtonTextDetection();
@@ -193,10 +177,6 @@ report.ButtonTextIssueDetails =
         buttonTextResult.FailedElements
     );
 
-report.FinalScore -= Math.Min(
-    20.0,
-    report.ButtonTextIssues * 2.0
-);
 
 // MISSING LANGUAGE
 var missingLanguageRule =
@@ -211,10 +191,7 @@ if (missingLanguageRule.IsLanguageMissing(document))
     );
 }
 
-report.FinalScore -= Math.Min(
-    20.0,
-    report.MissingLanguageIssues.Count * 2.0
-);
+
 
 // MISSING PAGE TITLE
 var missingPageTitleRule =
@@ -228,16 +205,132 @@ if (missingPageTitleRule.IsTitleMissing(document))
     );
 }
 
-report.FinalScore -= Math.Min(
-    20.0,
-    report.MissingPageTitleIssues.Count * 2.0
-);
+
 		// Run contrast analysis
 		var contrastFailures = await colourUtils.AnalyzeSiteContrastAsync(uri, html, 4.5);
 		report.ContrastFailures = contrastFailures ?? new List<ContrastFailure>();
 
-		// Adjust score based on contrast issues (simple heuristic)
-		report.FinalScore -= Math.Min(20.0, report.ContrastFailures.Count * 1.5);
+
+
+
+
+
+
+
+// Calculate automated WCAG assessment score
+
+// Level A criteria
+report.TestedCriteria = 0;
+report.PassedCriteria = 0;
+
+report.LevelATested = 0;
+report.LevelAPassed = 0;
+
+report.LevelAATested = 0;
+report.LevelAAPassed = 0;
+
+// 1.1.1 Non-text Content - Level A
+report.TestedCriteria++;
+report.LevelATested++;
+
+if (report.MissedAltAttributes == 0)
+{
+    report.PassedCriteria++;
+    report.LevelAPassed++;
+}
+
+// 1.3.1 Info and Relationships - Level A
+report.TestedCriteria++;
+report.LevelATested++;
+
+if (report.FormLabelIssues.Count == 0)
+{
+    report.PassedCriteria++;
+    report.LevelAPassed++;
+}
+
+// 2.1.1 Keyboard - Level A
+report.TestedCriteria++;
+report.LevelATested++;
+
+if (report.KeyboardIssues == 0)
+{
+    report.PassedCriteria++;
+    report.LevelAPassed++;
+}
+
+// 2.4.2 Page Titled - Level A
+report.TestedCriteria++;
+report.LevelATested++;
+
+if (report.MissingPageTitleIssues.Count == 0)
+{
+    report.PassedCriteria++;
+    report.LevelAPassed++;
+}
+
+// 2.4.4 Link Purpose - Level A
+report.TestedCriteria++;
+report.LevelATested++;
+
+if (report.EmptyLinkIssues.Count == 0)
+{
+    report.PassedCriteria++;
+    report.LevelAPassed++;
+}
+
+// 3.1.1 Language of Page - Level A
+report.TestedCriteria++;
+report.LevelATested++;
+
+if (report.MissingLanguageIssues.Count == 0)
+{
+    report.PassedCriteria++;
+    report.LevelAPassed++;
+}
+
+// 4.1.2 Name, Role, Value - Level A
+report.TestedCriteria++;
+report.LevelATested++;
+
+if (report.ButtonTextIssues == 0)
+{
+    report.PassedCriteria++;
+    report.LevelAPassed++;
+}
+
+// 1.4.3 Contrast (Minimum) - Level AA
+report.TestedCriteria++;
+report.LevelAATested++;
+
+if (report.ContrastFailures.Count == 0)
+{
+    report.PassedCriteria++;
+    report.LevelAAPassed++;
+}
+
+// 1.4.10 Reflow - Level AA
+report.TestedCriteria++;
+report.LevelAATested++;
+
+if (report.ResponsiveIssues == 0)
+{
+    report.PassedCriteria++;
+    report.LevelAAPassed++;
+}
+
+// Calculate percentage
+if (report.TestedCriteria > 0)
+{
+    report.FinalScore =
+        (double)report.PassedCriteria /
+        report.TestedCriteria *
+        100.0;
+}
+else
+{
+    report.FinalScore = 0.0;
+}
 
 		return report;
 	}

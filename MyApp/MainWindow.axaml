@@ -114,6 +114,12 @@
                                 FontSize="24"
                                 FontWeight="Bold"
                                 Foreground="White"/>
+                            
+                            <TextBlock
+                                x:Name="ScoreDetailsTextBlock"
+                                FontSize="15"
+                                Foreground="#CCCCCC"
+                                TextWrapping="Wrap"/>
 
                         </StackPanel>
 

@@ -64,7 +64,12 @@ private async void RunButton_Click(object? sender, RoutedEventArgs e)
 
         // Score
         ScoreTextBlock.Text =
-            $"Accessibility Score: {report.FinalScore:F1}";
+            $"Automated WCAG 2.2 Assessment: {report.FinalScore:F1}%";
+
+        ScoreDetailsTextBlock.Text =
+            $"{report.PassedCriteria} of {report.TestedCriteria} tested Success Criteria passed " +
+            $"(Level A: {report.LevelAPassed}/{report.LevelATested}, " +
+            $"Level AA: {report.LevelAAPassed}/{report.LevelAATested}).";
 
 
         // =========================
@@ -407,5 +412,9 @@ else
         {
             ContrastExpander.IsVisible = false;
         }
+    
+    
+    
+    
     }
 }
