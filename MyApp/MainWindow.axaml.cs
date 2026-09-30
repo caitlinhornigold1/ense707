@@ -322,6 +322,38 @@ else
 {
     MissingPageTitleExpander.IsVisible = false;
 }
+
+// BUTTON AND LINK LABELS
+ButtonTextSummaryTextBlock.Text =
+    $"Button and link label issues: {report.ButtonTextIssues}";
+
+ButtonTextIssuesPanel.Children.Clear();
+
+if (report.ButtonTextIssueDetails.Count > 0)
+{
+    ButtonTextExpander.IsVisible = true;
+
+    foreach (var issue in report.ButtonTextIssueDetails)
+    {
+        ButtonTextIssuesPanel.Children.Add(new TextBlock
+        {
+            Text =
+                $"• <{issue.ElementName}> " +
+                (string.IsNullOrWhiteSpace(issue.Id)
+                    ? "does not have accessible text or a label."
+                    : $"(ID: {issue.Id}) does not have accessible text or a label."),
+
+            FontSize = 15,
+            Foreground = Avalonia.Media.Brushes.White,
+            TextWrapping = Avalonia.Media.TextWrapping.Wrap,
+            Margin = new Avalonia.Thickness(0, 5, 0, 5)
+        });
+    }
+}
+else
+{
+    ButtonTextExpander.IsVisible = false;
+}
         // =========================
         // COLOUR CONTRAST
         // =========================

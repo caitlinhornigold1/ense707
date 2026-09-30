@@ -27,7 +27,12 @@ public List<string> MissingLanguageIssues { get; private set; } = new();
 	public List<string> MissingPageTitleIssues { get; private set; } = new();
 
 	public List<string> EmptyLinkIssues { get; private set; } = new();
+
 	public List<ContrastFailure> ContrastFailures { get; private set; } = new();
+
+	public int ButtonTextIssues { get; private set; }
+
+	public List<ButtonTextFailure> ButtonTextIssueDetails { get; private set; } = new();
 
 	public Report(string uri, string html)
 	{
@@ -174,6 +179,23 @@ foreach (var group in duplicateIds)
 report.FinalScore -= Math.Min(
     20.0,
     report.DuplicateIdIssues.Count * 2.0
+);
+
+// BUTTON AND LINK TEXT
+var buttonTextDetector = new ButtonTextDetection();
+
+var buttonTextResult = await buttonTextDetector.ScanAsync(html);
+
+report.ButtonTextIssues = buttonTextResult.Count;
+
+report.ButtonTextIssueDetails =
+    new List<ButtonTextFailure>(
+        buttonTextResult.FailedElements
+    );
+
+report.FinalScore -= Math.Min(
+    20.0,
+    report.ButtonTextIssues * 2.0
 );
 
 // MISSING LANGUAGE

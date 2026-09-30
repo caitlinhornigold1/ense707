@@ -24,6 +24,14 @@ namespace AccessibilityAnalyser.Tests
             Assert.True(report.ResponsiveIssues >= 1,
                 "The live page should contain at least one responsive design issue as a smoke test.");
 
+            Assert.True(report.EmptyLinkIssues.Count >= 1,
+                "The live page should contain at least one empty link as a smoke test.");
+            
+            Assert.True(report.DuplicateIdIssues.Count >= 1,
+                "The live page should contain at least one empty link as a smoke test.");
+
+            Assert.True(report.ButtonTextIssues >= 1,
+                "The live page should contain at least one responsive design issue as a smoke test.");
         }
 
     }
