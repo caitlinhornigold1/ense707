@@ -128,4 +128,24 @@ public class ParsingTests
         Assert.False(rule.IsLanguageMissing(docWithLang));
         Assert.True(rule.IsLanguageMissing(docWithEmptyLang));
     }
+        [Fact]
+    public async Task UnlabelledIframeRule_ReportsIframesWithoutTitle()
+    {
+        var html = @"
+            <html><body>
+                <iframe src='map.html' title='Store location map'></iframe>
+                <iframe src='video.html'></iframe>
+                <iframe src='ad.html' title=''></iframe>
+            </body></html>";
+
+        var parser = new HtmlParser();
+        var doc = await parser.ParseAsync(html);
+
+        var rule = new UnlabelledIframeRule();
+        var unlabelled = rule.FindUnlabelledIframes(doc).ToList();
+
+        Assert.Equal(2, unlabelled.Count);
+        Assert.Contains(unlabelled, f => f.GetAttribute("src") == "video.html");
+        Assert.Contains(unlabelled, f => f.GetAttribute("src") == "ad.html");
+    }
 }
