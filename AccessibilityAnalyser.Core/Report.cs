@@ -39,6 +39,8 @@ public List<string> MissingLanguageIssues { get; private set; } = new();
 
 	public List<string> MissingPageTitleIssues { get; private set; } = new();
 
+    public List<string> UnlabelledIframeIssues { get; private set; } = new();
+
 	public List<string> EmptyLinkIssues { get; private set; } = new();
 
 	public List<ContrastFailure> ContrastFailures { get; private set; } = new();
@@ -205,6 +207,20 @@ if (missingPageTitleRule.IsTitleMissing(document))
     );
 }
 
+// UNLABELLED IFRAMES
+var unlabelledIframeRule =
+    new AccessibilityAnalyser.Core.Rules.UnlabelledIframeRule();
+
+var unlabelledIframes = unlabelledIframeRule.FindUnlabelledIframes(document);
+
+foreach (var iframe in unlabelledIframes)
+{
+    report.UnlabelledIframeIssues.Add(
+        $"Iframe with src \"{iframe.GetAttribute("src")}\" is missing a title attribute. " +
+        "Recommendation: Add a descriptive title attribute so screen reader users know what the embedded content is."
+    );
+}
+
 
 		// Run contrast analysis
 		var contrastFailures = await colourUtils.AnalyzeSiteContrastAsync(uri, html, 4.5);
@@ -293,7 +309,7 @@ if (report.MissingLanguageIssues.Count == 0)
 report.TestedCriteria++;
 report.LevelATested++;
 
-if (report.ButtonTextIssues == 0)
+if (report.ButtonTextIssues == 0 && report.UnlabelledIframeIssues.Count == 0)
 {
     report.PassedCriteria++;
     report.LevelAPassed++;
