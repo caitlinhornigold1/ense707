@@ -39,6 +39,8 @@ public List<string> MissingLanguageIssues { get; private set; } = new();
 
 	public List<string> MissingPageTitleIssues { get; private set; } = new();
 
+    public List<string> HeadingOrderIssues { get; private set; } = new();
+
     public List<string> UnlabelledIframeIssues { get; private set; } = new();
 
 	public List<string> EmptyLinkIssues { get; private set; } = new();
@@ -218,6 +220,18 @@ foreach (var iframe in unlabelledIframes)
     report.UnlabelledIframeIssues.Add(
         $"Iframe with src \"{iframe.GetAttribute("src")}\" is missing a title attribute. " +
         "Recommendation: Add a descriptive title attribute so screen reader users know what the embedded content is."
+    );
+}
+
+// HEADING ORDER
+var headingOrderRule =
+    new AccessibilityAnalyser.Core.Rules.HeadingOrderRule();
+
+foreach (var heading in headingOrderRule.FindSkippedHeadings(document))
+{
+    report.HeadingOrderIssues.Add(
+        $"Heading \"{heading.TextContent.Trim()}\" ({heading.TagName.ToLower()}) skips a heading level. " +
+        "Recommendation: Use headings in order (h1, h2, h3) so the page structure is clear to screen reader users."
     );
 }
 
