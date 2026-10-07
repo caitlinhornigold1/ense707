@@ -148,4 +148,25 @@ public class ParsingTests
         Assert.Contains(unlabelled, f => f.GetAttribute("src") == "video.html");
         Assert.Contains(unlabelled, f => f.GetAttribute("src") == "ad.html");
     }
+        [Fact]
+    public async Task HeadingOrderRule_ReportsSkippedHeadingLevels()
+    {
+        var html = @"
+            <html><body>
+                <h1>Title</h1>
+                <h2>Section</h2>
+                <h4>Skipped</h4>
+                <h2>Another section</h2>
+                <h3>Fine</h3>
+            </body></html>";
+
+        var parser = new HtmlParser();
+        var doc = await parser.ParseAsync(html);
+
+        var rule = new HeadingOrderRule();
+        var skipped = rule.FindSkippedHeadings(doc).ToList();
+
+        Assert.Single(skipped);
+        Assert.Equal("Skipped", skipped[0].TextContent);
+    }
 }
