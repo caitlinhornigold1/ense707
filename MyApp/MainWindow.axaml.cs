@@ -242,6 +242,60 @@ else
     EmptyLinkExpander.IsVisible = false;
 }
 
+// UNLABELLED IFRAMES
+UnlabelledIframeSummaryTextBlock.Text =
+    $"Unlabelled iframe issues: {report.UnlabelledIframeIssues.Count}";
+
+UnlabelledIframeIssuesPanel.Children.Clear();
+
+if (report.UnlabelledIframeIssues.Count > 0)
+{
+    UnlabelledIframeExpander.IsVisible = true;
+
+    foreach (var issue in report.UnlabelledIframeIssues)
+    {
+        UnlabelledIframeIssuesPanel.Children.Add(new TextBlock
+        {
+            Text = $"• {issue}",
+            FontSize = 15,
+            Foreground = Avalonia.Media.Brushes.White,
+            TextWrapping = Avalonia.Media.TextWrapping.Wrap,
+            Margin = new Avalonia.Thickness(0, 5, 0, 5)
+        });
+    }
+}
+else
+{
+    UnlabelledIframeExpander.IsVisible = false;
+}
+
+// HEADING ORDER
+HeadingOrderSummaryTextBlock.Text =
+    $"Heading order issues: {report.HeadingOrderIssues.Count}";
+
+HeadingOrderIssuesPanel.Children.Clear();
+
+if (report.HeadingOrderIssues.Count > 0)
+{
+    HeadingOrderExpander.IsVisible = true;
+
+    foreach (var issue in report.HeadingOrderIssues)
+    {
+        HeadingOrderIssuesPanel.Children.Add(new TextBlock
+        {
+            Text = $"• {issue}",
+            FontSize = 15,
+            Foreground = Avalonia.Media.Brushes.White,
+            TextWrapping = Avalonia.Media.TextWrapping.Wrap,
+            Margin = new Avalonia.Thickness(0, 5, 0, 5)
+        });
+    }
+}
+else
+{
+    HeadingOrderExpander.IsVisible = false;
+}
+
 // duplicate IDs
 DuplicateIdSummaryTextBlock.Text =
     $"Duplicate ID issues: {report.DuplicateIdIssues.Count}";

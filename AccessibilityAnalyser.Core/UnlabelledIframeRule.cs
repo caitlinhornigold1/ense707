@@ -9,6 +9,13 @@ public class UnlabelledIframeRule
     public IEnumerable<IElement> FindUnlabelledIframes(IDocument document)
     {
         return document.QuerySelectorAll("iframe")
-            .Where(iframe => string.IsNullOrWhiteSpace(iframe.GetAttribute("title")));
+            .Where(iframe =>
+                string.IsNullOrWhiteSpace(iframe.GetAttribute("title")) &&
+                string.IsNullOrWhiteSpace(iframe.GetAttribute("aria-label")) &&
+                !iframe.GetAttribute("aria-labelledby")?
+                    .Split((char[]?)null, StringSplitOptions.RemoveEmptyEntries)
+                    .Select(document.GetElementById)
+                    .Any(el => el != null &&
+                        !string.IsNullOrWhiteSpace(el.TextContent)) == true);
     }
 }

@@ -31,6 +31,7 @@ public int LevelAAPassed { get; private set; }
 	public int ResponsiveIssues { get; private set; }
 	public List<string> ResponsiveIssueDescriptions { get; private set; } = new();
 
+
 public List<string> MissingLanguageIssues { get; private set; } = new();
 	public List<string> MalformedHtmlIssues { get; private set; } = new();
 	public List<FormElementMissingLabel> FormLabelIssues { get; private set; } = new();

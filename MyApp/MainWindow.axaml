@@ -311,6 +311,36 @@
 
 
 
+                    <!-- Unlabelled Iframes -->
+<Border Background="Black"
+        BorderBrush="Black"
+        BorderThickness="1"
+        CornerRadius="8"
+        Padding="15">
+    <StackPanel Spacing="8">
+        <TextBlock Text="Embedded Content (Iframes)"
+                   FontSize="20"
+                   FontWeight="Bold"
+                   Foreground="White"/>
+
+        <TextBlock x:Name="UnlabelledIframeSummaryTextBlock"
+                   FontSize="16"
+                   Foreground="White"/>
+
+        <Expander x:Name="UnlabelledIframeExpander"
+                  Header="View issues"
+                  Foreground="White"
+                  Background="Black"
+                  IsVisible="False">
+
+                <StackPanel x:Name="UnlabelledIframeIssuesPanel"
+                            Spacing="5"/>
+            
+        </Expander>
+    </StackPanel>
+</Border>
+
+
                     <!-- Language -->
                     <Border
                         Background="Black"
@@ -489,6 +519,35 @@
                             Foreground="Black"/>
 
                     </StackPanel>
+
+                    <!-- Heading Order -->
+<Border Background="Black"
+        BorderBrush="Black"
+        BorderThickness="1"
+        CornerRadius="8"
+        Padding="15">
+    <StackPanel Spacing="8">
+        <TextBlock Text="Heading Order"
+                   FontSize="20"
+                   FontWeight="Bold"
+                   Foreground="White"/>
+
+        <TextBlock x:Name="HeadingOrderSummaryTextBlock"
+                   FontSize="16"
+                   Foreground="White"/>
+
+        <Expander x:Name="HeadingOrderExpander"
+                  Header="View issues"
+                  Foreground="White"
+                  Background="Black"
+                  IsVisible="False">
+
+                <StackPanel x:Name="HeadingOrderIssuesPanel"
+                            Spacing="5"/>
+            
+        </Expander>
+    </StackPanel>
+</Border>
 
                     <!-- HTML Structure -->
                     <Border
